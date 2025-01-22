@@ -103,7 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-.vscode/
 .idea/
 
 # Docker data folders
