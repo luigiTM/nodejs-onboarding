@@ -4,18 +4,18 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.4.1",
     "prettier": "3.4.2",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   },
   "scripts": {
-    "start:dev": "nodemon --exec ts-node src/server.ts",
-    "prepare": "husky && husky install"
+    "start:dev": "node --watch --env-file=.env -r ts-node/register src/server.ts",
+    "prepare": "husky && husky init"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown",
     "*.{js,css,md}": "prettier --write"
   },
   "dependencies": {
-    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "zod": "^3.24.1"
   }
