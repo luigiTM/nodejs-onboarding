@@ -10,6 +10,7 @@
       "name": "Debug program",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/dist/server.js",
+      "runtimeArgs": ["--env-file", ".env"],
       "preLaunchTask": "tsc: compile – tsconfig.json",
       "sourceMaps": true,
       "smartStep": true,

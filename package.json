@@ -9,7 +9,8 @@
   },
   "scripts": {
     "start:dev": "node --watch --env-file=.env -r ts-node/register src/server.ts",
-    "prepare": "husky && husky init"
+    "prepare": "husky && husky init",
+    "test": " "
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown",
