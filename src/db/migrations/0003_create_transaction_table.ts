@@ -8,6 +8,7 @@ export async function up(knex: Knex) {
     table.integer("destination_account").references("id").inTable("account");
     table.specificType("amount", "money").notNullable().checkPositive();
     table.text("description").checkLength("<", 150);
+    table.dateTime("created_at").notNullable().defaultTo(new Date());
   });
 }
 
