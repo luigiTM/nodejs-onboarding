@@ -15,6 +15,17 @@ export const envVarsSchema = z.object({
     (api_version) => parseInt(api_version as string, 10),
     z.number().positive(),
   ),
+  DATABASE_URL: z.preprocess((database_url) => database_url, z.string()),
+  DATABASE_PORT: z.preprocess(
+    (database_port) => parseInt(database_port as string, 10),
+    z.number().positive().max(65535),
+  ),
+  DATABASE_USER: z.preprocess((database_user) => database_user, z.string()),
+  DATABASE_PASSWORD: z.preprocess(
+    (database_password) => database_password,
+    z.string(),
+  ),
+  DATABASE: z.preprocess((database) => database, z.string()),
 });
 
 export type envVarsSchemaType = z.infer<typeof envVarsSchema>;

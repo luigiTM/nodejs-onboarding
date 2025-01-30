@@ -1,5 +1,6 @@
 import express from "express";
 import env from "../config";
+import cors from "cors";
 
 export class App {
   private app = express();
@@ -9,6 +10,7 @@ export class App {
   }
 
   private setRoutes() {
+    this.app.use(cors());
     // Health check that returns the API version
     this.app.get("/healthcheck", (_, response, __) => {
       response.send(`API version ${env.API_VERSION}`);
