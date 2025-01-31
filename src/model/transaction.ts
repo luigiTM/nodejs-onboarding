@@ -1,7 +1,5 @@
 import { Model } from "objection";
 import { Tables } from "../db/tables";
-import User from "./user";
-import Currency from "./currency";
 import Account from "./account";
 
 export default class Transaction extends Model {
