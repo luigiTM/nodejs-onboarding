@@ -11,7 +11,7 @@ export async function up(knex: Knex) {
       .inTable("account")
       .index();
     table.specificType("amount", "money").notNullable().checkPositive();
-    table.text("description").checkLength("<", 150);
+    table.string("description", 150);
     table.dateTime("created_at").notNullable().defaultTo(new Date());
   });
 }

@@ -9,7 +9,7 @@ export default class UserRegister extends Model {
     type: "object",
     required: ["name", "password"],
     properties: {
-      name: { type: "string" },
+      name: { type: "string", minLength: 1, maxLength: 50 },
       password: { type: "string" },
     },
   };
