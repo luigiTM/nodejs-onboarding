@@ -1,23 +1,39 @@
 import express from "express";
 import env from "../config";
 import cors from "cors";
+import morgan from "morgan";
+import UserRegister from "../model/user/user_register";
+import Knex from "knex";
+import knexConfig from "./../db/knex/knexfile";
+import { Model } from "objection";
 
 export class App {
   private app = express();
 
-  constructor() {
-    this.setRoutes();
-  }
-
   private setRoutes() {
+    // Logs the requests
+    this.app.use(morgan("dev"));
+
+    // Allows the server to receive json
+    this.app.use(express.json());
+
+    // Allows the use of queries on the URL
+    this.app.use(express.urlencoded({ extended: true }));
+
+    // Enables CORS
     this.app.use(cors());
+
+    // Routes are defined here
     // Health check that returns the API version
     this.app.get("/healthcheck", (_, response, __) => {
       response.send(`API version ${env.API_VERSION}`);
+      return;
     });
+
     // This should be the last route so that the endpoints that have not been implemented yet match this condition.
     this.app.get("*", (_, response, __) => {
       response.status(404).send("Oops! Page Not Found");
+      return;
     });
   }
 
