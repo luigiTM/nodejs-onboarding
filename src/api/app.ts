@@ -2,10 +2,6 @@ import express from "express";
 import env from "../config";
 import cors from "cors";
 import morgan from "morgan";
-import UserRegister from "../model/user/user_register";
-import Knex from "knex";
-import knexConfig from "./../db/knex/knexfile";
-import { Model } from "objection";
 
 export class App {
   private app = express();

@@ -18,6 +18,8 @@
     "knex:migrate": "npx env-cmd knex --knexfile src/db/knex/knexfile.ts migrate:latest",
     "knex:rollback": "npx env-cmd knex --knexfile src/db/knex/knexfile.ts migrate:rollback",
     "knex:rollback-all": "npx env-cmd knex --knexfile src/db/knex/knexfile.ts migrate:rollback --all",
+    "knex:seed": "npx env-cmd knex --knexfile src/db/knex/knexfile.ts seed:run",
+    "knex:rebuild-database": "yarn run knex:rollback-all && yarn run knex:migrate && yarn run knex:seed",
     "test": " "
   },
   "lint-staged": {
