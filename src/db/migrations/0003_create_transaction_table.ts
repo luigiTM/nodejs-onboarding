@@ -12,7 +12,7 @@ export async function up(knex: Knex) {
       .index();
     table.specificType("amount", "money").notNullable();
     table.string("description", 150);
-    table.dateTime("created_at").notNullable().defaultTo(knex.raw("now()"));
+    table.dateTime("created_at").notNullable().defaultTo(knex.fn.now());
   });
 }
 

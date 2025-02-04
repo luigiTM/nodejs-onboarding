@@ -10,11 +10,13 @@ export class App {
   private app = express();
 
   constructor() {
+    this.setMiddlewares();
     this.setRoutes();
     Model.knex(knex_connector);
   }
 
-  private setRoutes() {
+  private setMiddlewares() {
+    // Middlewares are defined here
     // Logs the requests
     this.app.use(morgan("dev"));
 
@@ -26,7 +28,9 @@ export class App {
 
     // Enables CORS
     this.app.use(cors());
+  }
 
+  private setRoutes() {
     // Routes are defined here
     // Health check that returns the API version
     this.app.get("/healthcheck", (_, response, __) => {
