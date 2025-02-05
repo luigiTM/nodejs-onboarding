@@ -1,35 +1,42 @@
-import NewUser, { NewUserShape } from "../../model/user/new_user";
-import { UserRepository } from "../../repositories/user.repository";
 import { authServiceImpl } from "./auth.service.impl";
-import { AccountRepository } from "../../repositories/account.repository";
-import { Currencies } from "../../enums/currencies";
-import { UserService } from "../user.service";
 import { AuthService } from "../auth.service";
 import { userRepositoryImpl } from "../../repositories/impl/user.repository.impl";
-import { accountRepositoryImpl } from "../../repositories/impl/account.repository.impl";
+import { Service } from "../entity.service";
+import User from "../../model/user";
+import { Repository } from "../../repositories/entity.repository";
+import {
+  CreateUserDto,
+  createUserDtoSchema,
+} from "../../dtos/user/create-user.dto";
+import { CreateAccountDto } from "../../dtos/account/create-account.dto";
+import Account from "../../model/account";
+import { Currencies } from "../../enums/currencies";
+import { accountServiceImpl } from "./account.service.impl";
 
-export class UserServiceImpl implements UserService {
+export class UserServiceImpl implements Service<CreateUserDto, User> {
   private authService: AuthService;
-  private userRepository: UserRepository;
-  private accountRepository: AccountRepository;
+  private accountService: Service<CreateAccountDto, Account>;
+  private userRepository: Repository<CreateUserDto, User>;
 
   constructor() {
     this.authService = authServiceImpl;
     this.userRepository = userRepositoryImpl;
-    this.accountRepository = accountRepositoryImpl;
+    this.accountService = accountServiceImpl;
   }
 
-  public async createUser(user: NewUserShape): Promise<NewUser> {
-    user.password = await this.authService.hashPassword(user.password);
-    let newUser = await this.userRepository.insertUser(user);
-    if (newUser.id) {
-      this.accountRepository.createAccount(newUser.id, [
-        Currencies.UYU,
-        Currencies.USD,
-        Currencies.EUR,
-      ]);
-    }
-    return newUser;
+  public async create(newUser: CreateUserDto): Promise<User> {
+    createUserDtoSchema.parse(newUser);
+    newUser.password = await this.authService.hashPassword(newUser.password);
+    let createdUser = await this.userRepository.insert(newUser);
+    // Create the accounts associated with the user
+    [Currencies.UYU, Currencies.USD, Currencies.EUR].forEach((currency_id) => {
+      this.accountService.create({
+        user_id: createdUser.id,
+        currency_id,
+        balance: 5000,
+      });
+    });
+    return createdUser;
   }
 }
 

@@ -1,20 +1,17 @@
 import knex_connector from "../../db/knex.connector";
-import NewAccount from "../../model/account/new_account";
-import { AccountRepository } from "../account.repository";
+import { CreateAccountDto } from "../../dtos/account/create-account.dto";
+import Account from "../../model/account";
+import { Repository } from "../entity.repository";
 
-export class AccountRepositoryImpl implements AccountRepository {
+export class AccountRepositoryImpl
+  implements Repository<CreateAccountDto, Account>
+{
   constructor() {
-    NewAccount.knex(knex_connector);
+    Account.knex(knex_connector);
   }
 
-  public createAccount(user_id: string, currencies: number[]) {
-    currencies.forEach(async (currency) => {
-      await NewAccount.query().insert({
-        user_id,
-        currency_id: currency,
-        balance: 0,
-      });
-    });
+  public async insert(newAccount: CreateAccountDto): Promise<Account> {
+    return await Account.query().insert(newAccount);
   }
 }
 
