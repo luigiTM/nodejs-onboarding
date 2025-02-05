@@ -1,11 +1,12 @@
-import { Model, snakeCaseMappers } from "objection";
-import { Tables } from "../../db/tables";
+import { Model, ModelObject, snakeCaseMappers } from "objection";
+import { Tables } from "../../enums/tables";
 
-export default class UserRegister extends Model {
+export default class NewUser extends Model {
   static get columnNameMappers() {
     return snakeCaseMappers();
   }
   static tableName = Tables.user;
+  id?: string;
   firstName!: string;
   lastName!: string;
   email!: string;
@@ -21,3 +22,5 @@ export default class UserRegister extends Model {
     },
   };
 }
+
+export type NewUserShape = ModelObject<NewUser>;

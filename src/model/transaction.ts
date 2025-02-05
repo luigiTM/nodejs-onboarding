@@ -1,6 +1,6 @@
 import { Model } from "objection";
-import { Tables } from "../db/tables";
-import Account from "./account";
+import { Tables } from "../enums/tables";
+import Account from "./account/account";
 
 export default class Transaction extends Model {
   static tableName = Tables.transaction;

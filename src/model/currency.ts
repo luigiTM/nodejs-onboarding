@@ -1,5 +1,5 @@
 import { Model } from "objection";
-import { Tables } from "../db/tables";
+import { Tables } from "../enums/tables";
 
 export default class Currency extends Model {
   static tableName = Tables.currency;

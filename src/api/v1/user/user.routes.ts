@@ -28,7 +28,9 @@ class UserRoutes {
    * this.userRouter.get('/:id', this.userController.getUserById);
    */
   private setRoutes() {
-    this.userRouter.post("/signin", this.userController.createUser);
+    this.userRouter.post("/signin", (request, response) => {
+      this.userController.createUser(request, response);
+    });
   }
 }
 

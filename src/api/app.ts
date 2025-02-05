@@ -4,7 +4,6 @@ import cors from "cors";
 import morgan from "morgan";
 import { userRouter } from "./v1/user/user.routes";
 import { Model } from "objection";
-import knex_connector from "../db/knex.connector";
 
 export class App {
   private app = express();
@@ -12,7 +11,6 @@ export class App {
   constructor() {
     this.setMiddlewares();
     this.setRoutes();
-    Model.knex(knex_connector);
   }
 
   private setMiddlewares() {
