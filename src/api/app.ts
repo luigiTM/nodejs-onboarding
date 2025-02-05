@@ -3,7 +3,7 @@ import env from "../config";
 import cors from "cors";
 import morgan from "morgan";
 import { userRouter } from "./v1/user/user.routes";
-import { Model } from "objection";
+import { globalErrorHandler } from "../middlewares/global-error-handler.middleware";
 
 export class App {
   private app = express();
@@ -11,6 +11,7 @@ export class App {
   constructor() {
     this.setMiddlewares();
     this.setRoutes();
+    this.setErrorHandlers();
   }
 
   private setMiddlewares() {
@@ -43,6 +44,10 @@ export class App {
       response.status(404).send("Oops! Page Not Found");
       return;
     });
+  }
+
+  private setErrorHandlers() {
+    this.app.use(globalErrorHandler.handleError);
   }
 
   public start() {
