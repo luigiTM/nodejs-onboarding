@@ -2,9 +2,6 @@ import express from "express";
 import env from "../config";
 import cors from "cors";
 import morgan from "morgan";
-import { userRouter } from "./v1/user/user.routes";
-import { Model } from "objection";
-import knex_connector from "../db/knex.connector";
 
 export class App {
   private app = express();
@@ -12,7 +9,6 @@ export class App {
   constructor() {
     this.setMiddlewares();
     this.setRoutes();
-    Model.knex(knex_connector);
   }
 
   private setMiddlewares() {
@@ -37,11 +33,9 @@ export class App {
       response.send(`API version ${env.API_VERSION}`);
       return;
     });
-    // User routes
-    this.app.use("/user", userRouter.getRouter());
+
     // This should be the last route so that the endpoints that have not been implemented yet match this condition.
-    // We use all here to match all the HTTP verbs
-    this.app.all("*", (_, response, __) => {
+    this.app.get("*", (_, response, __) => {
       response.status(404).send("Oops! Page Not Found");
       return;
     });
