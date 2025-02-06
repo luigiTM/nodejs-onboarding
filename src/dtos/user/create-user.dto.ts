@@ -9,8 +9,8 @@ export interface CreateUserDto extends CreateDto {
 }
 
 export const createUserDtoSchema: z.ZodType<CreateUserDto> = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
-  email: z.string(),
+  firstName: z.string().min(1).max(50),
+  lastName: z.string().min(1).max(50),
+  email: z.string().email(),
   password: z.string(),
 });

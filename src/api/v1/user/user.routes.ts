@@ -1,13 +1,13 @@
-import express from "express";
+import { Router } from "express";
 import { UserController, userController } from "./user.controller";
 
 class UserRoutes {
   private userController: UserController;
-  private userRouter: express.Router;
+  private userRouter: Router;
 
   constructor() {
     this.userController = userController;
-    this.userRouter = express.Router();
+    this.userRouter = Router();
     this.setRoutes();
   }
 
@@ -15,9 +15,9 @@ class UserRoutes {
    * Router Getter
    * Call from main app.ts using
    * `this.app.use('/users', userRouter.getRouter());`
-   * @returns {express.Router} router
+   * @returns {Router} router
    */
-  public getRouter(): express.Router {
+  public getRouter(): Router {
     return this.userRouter;
   }
 
