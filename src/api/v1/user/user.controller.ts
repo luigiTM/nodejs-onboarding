@@ -1,22 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import { userServiceImpl } from "../../../services/impl/user.service.impl";
-import { Service } from "../../../services/entity.service";
-import User from "../../../model/user";
-import { CreateUserDto } from "../../../dtos/user/create-user.dto";
 import { UserDto } from "../../../dtos/user/user.dto";
+import { UserService } from "../../../services/user.service";
 
 export class UserController {
-  private userService: Service<CreateUserDto, User>;
+  private userService: UserService;
 
   constructor() {
     this.userService = userServiceImpl;
   }
 
-  public async createUser(
-    request: Request,
-    response: Response,
-    next: NextFunction,
-  ) {
+  async createUser(request: Request, response: Response, next: NextFunction) {
     try {
       let createdUser = await this.userService.create(request.body);
       const { password, ...userDto }: UserDto & { password: string } =
@@ -25,6 +19,10 @@ export class UserController {
     } catch (error) {
       next(error);
     }
+  }
+
+  async login(request: Request, response: Response, next: NextFunction) {
+    this.userService.login(request.body);
   }
 }
 

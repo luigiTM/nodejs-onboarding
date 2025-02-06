@@ -3,7 +3,6 @@ import { AuthService } from "../auth.service";
 import { userRepositoryImpl } from "../../repositories/impl/user.repository.impl";
 import { Service } from "../entity.service";
 import User from "../../model/user";
-import { Repository } from "../../repositories/entity.repository";
 import {
   CreateUserDto,
   createUserDtoSchema,
@@ -12,11 +11,14 @@ import { CreateAccountDto } from "../../dtos/account/create-account.dto";
 import Account from "../../model/account";
 import { Currencies } from "../../enums/currencies";
 import { accountServiceImpl } from "./account.service.impl";
+import { UserService } from "../user.service";
+import { UserLoginDto, userLoginSchema } from "../../dtos/user/user-login.dto";
+import { UserRepository } from "../../repositories/user.respository";
 
-export class UserServiceImpl implements Service<CreateUserDto, User> {
+export class UserServiceImpl implements UserService {
   private authService: AuthService;
   private accountService: Service<CreateAccountDto, Account>;
-  private userRepository: Repository<CreateUserDto, User>;
+  private userRepository: UserRepository;
 
   constructor() {
     this.authService = authServiceImpl;
@@ -24,7 +26,7 @@ export class UserServiceImpl implements Service<CreateUserDto, User> {
     this.accountService = accountServiceImpl;
   }
 
-  public async create(newUser: CreateUserDto): Promise<User> {
+  async create(newUser: CreateUserDto): Promise<User> {
     createUserDtoSchema.parse(newUser);
     newUser.password = await this.authService.hashPassword(newUser.password);
     let createdUser = await this.userRepository.insert(newUser);
@@ -37,6 +39,11 @@ export class UserServiceImpl implements Service<CreateUserDto, User> {
       });
     });
     return createdUser;
+  }
+
+  login(userLogin: UserLoginDto): string {
+    userLoginSchema.parse(userLogin);
+    const user = this.userRepository.findByEmail(userLogin.email);
   }
 }
 

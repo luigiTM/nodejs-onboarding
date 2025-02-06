@@ -1,7 +1,6 @@
-import { CreateDto } from "../create.dto";
 import { z } from "zod";
 
-export interface CreateUserDto extends CreateDto {
+export interface CreateUserDto {
   firstName: string;
   lastName: string;
   email: string;
