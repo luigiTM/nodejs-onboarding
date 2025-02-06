@@ -15,7 +15,7 @@ class UserRoutes {
    * Router Getter
    * Call from main app.ts using
    * `this.app.use('/users', userRouter.getRouter());`
-   * @returns {express.Router} router
+   * @returns {Router} router
    */
   public getRouter(): Router {
     return this.userRouter;

@@ -1,5 +1,3 @@
-import { Model } from "objection";
-
-export interface Service<T, K extends Model> {
+export interface Service<T, K> {
   create(entity: T): Promise<K>;
 }

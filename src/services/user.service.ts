@@ -1,8 +1,8 @@
 import { CreateUserDto } from "../dtos/user/create-user.dto";
 import { UserLoginDto } from "../dtos/user/user-login.dto";
-import User from "../model/user";
+import { UserDto } from "../dtos/user/user.dto";
 import { Service } from "./entity.service";
 
-export interface UserService extends Service<CreateUserDto, User> {
+export interface UserService extends Service<CreateUserDto, UserDto> {
   login(userLogin: UserLoginDto): string;
 }
