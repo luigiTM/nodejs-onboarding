@@ -4,5 +4,5 @@ import { UserDto } from "../dtos/user/user.dto";
 import { Service } from "./entity.service";
 
 export interface UserService extends Service<CreateUserDto, UserDto> {
-  login(userLogin: UserLoginDto): string;
+  login(userLogin: UserLoginDto): Promise<string>;
 }

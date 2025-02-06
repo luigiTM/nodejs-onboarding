@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ErrorHandler } from "./error-handler";
 import { ValidationError } from "../errors/validation.error";
@@ -7,12 +7,7 @@ import { EmailAlreadyInUseError } from "../errors/email-already-in-use.error";
 export class GlobalErrorHandler implements ErrorHandler {
   constructor() {}
 
-  public handleError = (
-    error: Error,
-    request: Request,
-    response: Response,
-    next: NextFunction,
-  ) => {
+  public handleError = (error: Error, _: Request, response: Response) => {
     let status: number = StatusCodes.INTERNAL_SERVER_ERROR;
     let messages: string[] = [];
     if (error instanceof ValidationError) {

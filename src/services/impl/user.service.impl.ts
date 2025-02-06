@@ -2,21 +2,18 @@ import { authServiceImpl } from "./auth.service.impl";
 import { AuthService } from "../auth.service";
 import { userRepositoryImpl } from "../../repositories/impl/user.repository.impl";
 import { Service } from "../entity.service";
-import User from "../../model/user";
-import {
-  CreateUserDto,
-  createUserDtoSchema,
-} from "../../dtos/user/create-user.dto";
+import { CreateUserDto } from "../../dtos/user/create-user.dto";
 import { CreateAccountDto } from "../../dtos/account/create-account.dto";
 import Account from "../../model/account";
 import { Currencies } from "../../enums/currencies";
 import { accountServiceImpl } from "./account.service.impl";
-import { UserLoginDto, userLoginSchema } from "../../dtos/user/user-login.dto";
+import { UserLoginDto } from "../../dtos/user/user-login.dto";
 import { UserRepository } from "../../repositories/user.respository";
 import { UserDto } from "../../dtos/user/user.dto";
 import { UniqueViolationError } from "objection";
 import { EmailAlreadyInUseError } from "../../errors/email-already-in-use.error";
 import { UserService } from "../user.service";
+import { UserOrPasswordError } from "../../errors/user-or-password.error";
 
 export class UserServiceImpl implements UserService {
   private authService: AuthService;
@@ -32,7 +29,7 @@ export class UserServiceImpl implements UserService {
   public async create(newUser: CreateUserDto): Promise<UserDto> {
     try {
       newUser.password = await this.authService.hashPassword(newUser.password);
-      let createdUser = await this.userRepository.insert(newUser);
+      const createdUser = await this.userRepository.insert(newUser);
       // Create the accounts associated with the user
       [Currencies.UYU, Currencies.USD, Currencies.EUR].forEach(
         (currency_id) => {
@@ -60,9 +57,19 @@ export class UserServiceImpl implements UserService {
     }
   }
 
-  login(userLogin: UserLoginDto): string {
-    userLoginSchema.parse(userLogin);
-    const user = this.userRepository.findByEmail(userLogin.email);
+  async login(userLogin: UserLoginDto): Promise<string> {
+    const user = await this.userRepository.findByEmail(userLogin.email);
+    if (!user) {
+      throw new UserOrPasswordError();
+    }
+    const isValidPassword = this.authService.comparePassword(
+      userLogin.password,
+      user.password,
+    );
+    if (!isValidPassword) {
+      throw new UserOrPasswordError();
+    }
+    return await this.authService.createToken(user);
   }
 }
 

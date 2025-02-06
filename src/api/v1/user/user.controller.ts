@@ -4,6 +4,7 @@ import { UserService } from "../../../services/user.service";
 import { createUserDtoSchema } from "../../../dtos/user/create-user.dto";
 import { ZodError } from "zod";
 import { ValidationError } from "../../../errors/validation.error";
+import { userLoginSchema } from "../../../dtos/user/user-login.dto";
 
 export class UserController {
   private userService: UserService;
@@ -16,7 +17,7 @@ export class UserController {
     try {
       const userToCreate = request.body;
       createUserDtoSchema.parse(userToCreate);
-      let createdUser = await this.userService.create(userToCreate);
+      const createdUser = await this.userService.create(userToCreate);
       response.send(createdUser);
     } catch (error) {
       if (error instanceof ZodError) {
@@ -32,11 +33,26 @@ export class UserController {
   }
 
   async login(request: Request, response: Response, next: NextFunction) {
-    this.userService.login(request.body);
+    try {
+      const userLogin = request.body;
+      userLoginSchema.parse(userLogin);
+      const token = await this.userService.login(userLogin);
+      response.send({ token: token });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        next(
+          new ValidationError(
+            "Validation failed",
+            this.createValidationErrorMessage(error),
+          ),
+        );
+      }
+      next(error);
+    }
   }
 
   private createValidationErrorMessage(zodError: ZodError): string[] {
-    let response_messages: string[] = [];
+    const response_messages: string[] = [];
     zodError.issues.forEach((issue) => {
       if (issue.message == "Required") {
         response_messages.push(`Field ${issue.path} is required`);

@@ -32,7 +32,7 @@ export class App {
   private setRoutes() {
     // Routes are defined here
     // Health check that returns the API version
-    this.app.get("/healthcheck", (_, response, __) => {
+    this.app.get("/healthcheck", (_, response) => {
       response.send(`API version ${env.API_VERSION}`);
       return;
     });
@@ -40,7 +40,7 @@ export class App {
     this.app.use("/user", userRouter.getRouter());
     // This should be the last route so that the endpoints that have not been implemented yet match this condition.
     // We use all here to match all the HTTP verbs
-    this.app.all("*", (_, response, __) => {
+    this.app.all("*", (_, response) => {
       response.status(404).send("Oops! Page Not Found");
       return;
     });
