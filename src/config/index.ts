@@ -6,4 +6,5 @@ const env = ((): envVarsSchemaType => {
     throw new Error(validateEnvVarsSchemaResult.error.toString());
   return validateEnvVarsSchemaResult.data;
 })();
+
 export default env;

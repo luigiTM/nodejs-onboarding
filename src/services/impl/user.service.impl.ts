@@ -62,7 +62,7 @@ export class UserServiceImpl implements UserService {
     if (!user) {
       throw new UserOrPasswordError();
     }
-    const isValidPassword = this.authService.comparePassword(
+    const isValidPassword = await this.authService.comparePassword(
       userLogin.password,
       user.password,
     );
