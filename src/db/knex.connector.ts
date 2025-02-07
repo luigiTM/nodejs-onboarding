@@ -1,6 +1,6 @@
 import knex from "knex";
 import config from "./knex/knexfile";
 
-const knex_connector = knex(config);
+const knexConnector = knex(config);
 
-export default knex_connector;
+export default knexConnector;

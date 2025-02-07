@@ -19,7 +19,15 @@ export class AuthServiceImpl implements AuthService {
   }
 
   async createToken(user: User): Promise<string> {
-    return jwt.sign({ id: user.id, email: user.email }, env.JWT_SECRET);
+    return jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
+      env.JWT_SECRET,
+    );
   }
 }
 

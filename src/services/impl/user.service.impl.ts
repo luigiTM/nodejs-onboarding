@@ -9,7 +9,7 @@ import { Currencies } from "../../enums/currencies";
 import { accountServiceImpl } from "./account.service.impl";
 import { UserLoginDto } from "../../dtos/user/user-login.dto";
 import { UserRepository } from "../../repositories/user.respository";
-import { UserDto } from "../../dtos/user/user.dto";
+import { toDto, UserDto } from "../../dtos/user/user.dto";
 import { UniqueViolationError } from "objection";
 import { EmailAlreadyInUseError } from "../../errors/email-already-in-use.error";
 import { UserService } from "../user.service";
@@ -40,9 +40,7 @@ export class UserServiceImpl implements UserService {
           });
         },
       );
-      const { password, ...userDto }: UserDto & { password: string } =
-        createdUser;
-      return userDto;
+      return toDto(createdUser);
     } catch (error) {
       if (error instanceof UniqueViolationError) {
         error.columns.forEach((column) => {
