@@ -3,7 +3,8 @@ import env from "../config";
 import cors from "cors";
 import morgan from "morgan";
 import { userRouter } from "./v1/user/user.routes";
-import { globalErrorHandler } from "../middlewares/global-error-handler.middleware";
+import cookieParser from "cookie-parser";
+import { globalErrorHandler } from "./middlewares/global-error-handler.middleware";
 
 export class App {
   private app = express();
@@ -21,6 +22,8 @@ export class App {
 
     // Allows the server to receive json
     this.app.use(express.json());
+
+    this.app.use(cookieParser());
 
     // Allows the use of queries on the URL
     this.app.use(express.urlencoded({ extended: true }));

@@ -1,5 +1,5 @@
 import { Model } from "objection";
-import { Tables } from "../enums/tables";
+import { Tables } from "../db/enums/tables";
 import User from "./user";
 import Currency from "./currency";
 

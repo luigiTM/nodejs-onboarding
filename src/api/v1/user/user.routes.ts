@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { UserController, userController } from "./user.controller";
+import { authMiddleware } from "../../middlewares/auth.middleware";
 
 class UserRoutes {
   private userController: UserController;
@@ -33,6 +34,12 @@ class UserRoutes {
     });
     this.userRouter.post("/login", (request, response, next) => {
       this.userController.login(request, response, next);
+    });
+    this.userRouter.use((request, response, next) => {
+      authMiddleware.protect(request, response, next);
+    });
+    this.userRouter.get("/account", (request, response, next) => {
+      this.userController.getAccounts(request, response, next);
     });
   }
 }

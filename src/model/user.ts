@@ -1,5 +1,5 @@
 import { Model, snakeCaseMappers } from "objection";
-import { Tables } from "../enums/tables";
+import { Tables } from "../db/enums/tables";
 
 export default class User extends Model {
   static get columnNameMappers() {

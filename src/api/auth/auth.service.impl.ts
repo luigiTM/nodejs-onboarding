@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
-import { AuthService } from "../auth.service";
+import { AuthService } from "./auth.service";
 import User from "../../model/user";
 import env from "../../config";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 export class AuthServiceImpl implements AuthService {
   constructor() {}
@@ -28,6 +28,10 @@ export class AuthServiceImpl implements AuthService {
       },
       env.JWT_SECRET,
     );
+  }
+
+  async verify(token: string): Promise<string | JwtPayload> {
+    return jwt.verify(token, env.JWT_SECRET);
   }
 }
 
