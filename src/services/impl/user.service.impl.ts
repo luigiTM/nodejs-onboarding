@@ -10,8 +10,6 @@ import { accountServiceImpl } from "./account.service.impl";
 import { UserLoginDto } from "../../dtos/user/user-login.dto";
 import { UserRepository } from "../../repositories/user.respository";
 import { toDto, UserDto } from "../../dtos/user/user.dto";
-import { UniqueViolationError } from "objection";
-import { EmailAlreadyInUseError } from "../../errors/email-already-in-use.error";
 import { UserService } from "../user.service";
 import { UserOrPasswordError } from "../../errors/user-or-password.error";
 
@@ -27,32 +25,17 @@ export class UserServiceImpl implements UserService {
   }
 
   public async create(newUser: CreateUserDto): Promise<UserDto> {
-    try {
-      newUser.password = await this.authService.hashPassword(newUser.password);
-      const createdUser = await this.userRepository.insert(newUser);
-      // Create the accounts associated with the user
-      [Currencies.UYU, Currencies.USD, Currencies.EUR].forEach(
-        (currency_id) => {
-          this.accountService.create({
-            user_id: createdUser.id,
-            currency_id,
-            balance: 5000,
-          });
-        },
-      );
-      return toDto(createdUser);
-    } catch (error) {
-      if (error instanceof UniqueViolationError) {
-        error.columns.forEach((column) => {
-          if (column == "email") {
-            throw new EmailAlreadyInUseError(
-              "There provided email is already in use",
-            );
-          }
-        });
-      }
-      throw error;
-    }
+    newUser.password = await this.authService.hashPassword(newUser.password);
+    const createdUser = await this.userRepository.insert(newUser);
+    // Create the accounts associated with the user
+    [Currencies.UYU, Currencies.USD, Currencies.EUR].forEach((currency_id) => {
+      this.accountService.create({
+        user_id: createdUser.id,
+        currency_id,
+        balance: 5000,
+      });
+    });
+    return toDto(createdUser);
   }
 
   async login(userLogin: UserLoginDto): Promise<string> {
@@ -60,10 +43,7 @@ export class UserServiceImpl implements UserService {
     if (!user) {
       throw new UserOrPasswordError();
     }
-    const isValidPassword = await this.authService.comparePassword(
-      userLogin.password,
-      user.password,
-    );
+    const isValidPassword = await this.authService.comparePassword(userLogin.password, user.password);
     if (!isValidPassword) {
       throw new UserOrPasswordError();
     }

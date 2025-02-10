@@ -5,6 +5,7 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import { userRouter } from "./v1/user/user.routes";
 import { globalErrorHandler } from "./middlewares/global-error-handler.middleware";
+import { accountRoutes } from "./v1/account/account.routes";
 
 export class App {
   private app = express();
@@ -23,6 +24,7 @@ export class App {
     // Allows the server to receive json
     this.app.use(express.json());
 
+    // Parse cookies raw string to a key-value
     this.app.use(cookieParser());
 
     // Allows the use of queries on the URL
@@ -42,6 +44,9 @@ export class App {
 
     // User routes
     this.app.use("/user", userRouter.getRouter());
+
+    // Account routes
+    this.app.use("/account", accountRoutes.getRouter());
 
     // This should be the last route so that the endpoints that have not been implemented yet match this condition.
     // We use all here to match all the HTTP verbs

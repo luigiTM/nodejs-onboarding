@@ -1,45 +1,21 @@
-import { Router } from "express";
 import { UserController, userController } from "./user.controller";
 import { authMiddleware } from "../../middlewares/auth.middleware";
+import { BaseRoutes } from "../base.routes";
 
-class UserRoutes {
-  private userController: UserController;
-  private userRouter: Router;
-
+class UserRoutes extends BaseRoutes<UserController> {
   constructor() {
-    this.userController = userController;
-    this.userRouter = Router();
-    this.setRoutes();
+    super(userController);
   }
 
-  /**
-   * Router Getter
-   * Call from main app.ts using
-   * `this.app.use('/users', userRouter.getRouter());`
-   * @returns {Router} router
-   */
-  public getRouter(): Router {
-    return this.userRouter;
-  }
-
-  /**
-   * Router Setter
-   * Routes GET, POST, etc..
-   * Example:
-   * this.userRouter.get('/:id', this.userController.getUserById);
-   */
-  private setRoutes() {
-    this.userRouter.post("/signin", (request, response, next) => {
-      this.userController.createUser(request, response, next);
+  protected setRoutes() {
+    this.router.post("/signin", (request, response, next) => {
+      this.controller.createUser(request, response, next);
     });
-    this.userRouter.post("/login", (request, response, next) => {
-      this.userController.login(request, response, next);
+    this.router.post("/login", (request, response, next) => {
+      this.controller.login(request, response, next);
     });
-    this.userRouter.use((request, response, next) => {
+    this.router.use((request, response, next) => {
       authMiddleware.protect(request, response, next);
-    });
-    this.userRouter.get("/account", (request, response, next) => {
-      this.userController.getAccounts(request, response, next);
     });
   }
 }
