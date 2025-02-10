@@ -6,13 +6,13 @@ export async function up(knex: Knex) {
     table.uuid("id").primary().index();
     table.uuid("source_account").references("id").inTable("account").index();
     table
-      .integer("destination_account")
+      .uuid("destination_account")
       .references("id")
       .inTable("account")
       .index();
-    table.specificType("amount", "money").notNullable().checkPositive();
-    table.text("description").checkLength("<", 150);
-    table.dateTime("created_at").notNullable().defaultTo(new Date());
+    table.specificType("amount", "money").notNullable();
+    table.string("description", 150);
+    table.dateTime("created_at").notNullable().defaultTo(knex.fn.now());
   });
 }
 

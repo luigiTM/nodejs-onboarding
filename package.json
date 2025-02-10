@@ -2,12 +2,14 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/morgan": "^1.9.9",
     "@types/node": "^22.12.0",
+    "@types/uuid": "^10.0.0",
+    "env-cmd": "^10.1.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.1",
     "prettier": "3.4.2",
     "ts-node": "^10.9.2",
-    "env-cmd": "^10.1.0",
     "typescript": "^5.7.3"
   },
   "scripts": {
@@ -16,6 +18,8 @@
     "knex:migrate": "npx env-cmd knex --knexfile src/db/knex/knexfile.ts migrate:latest",
     "knex:rollback": "npx env-cmd knex --knexfile src/db/knex/knexfile.ts migrate:rollback",
     "knex:rollback-all": "npx env-cmd knex --knexfile src/db/knex/knexfile.ts migrate:rollback --all",
+    "knex:seed": "npx env-cmd knex --knexfile src/db/knex/knexfile.ts seed:run",
+    "knex:rebuild-database": "yarn run knex:rollback-all && yarn run knex:migrate && yarn run knex:seed",
     "test": " "
   },
   "lint-staged": {
@@ -26,8 +30,10 @@
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "knex": "^3.1.0",
+    "morgan": "^1.10.0",
     "objection": "^3.1.5",
     "pg": "^8.13.1",
+    "uuid": "^11.0.5",
     "zod": "^3.24.1"
   }
 }
