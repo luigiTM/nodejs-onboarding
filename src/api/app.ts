@@ -2,7 +2,8 @@ import express from "express";
 import env from "../config";
 import cors from "cors";
 import morgan from "morgan";
-import { globalErrorHandler } from "../middlewares/global-error-handler.middleware";
+import { userRouter } from "./v1/user/user.routes";
+import { globalErrorHandler } from "./middlewares/global-error-handler.middleware";
 
 export class App {
   private app = express();
@@ -36,8 +37,11 @@ export class App {
       return;
     });
 
+    // User routes
+    this.app.use("/user", userRouter.getRouter());
+
     // This should be the last route so that the endpoints that have not been implemented yet match this condition.
-    this.app.get("*", (_, response, __) => {
+    this.app.all("*", (_, response, __) => {
       response.status(404).send("Oops! Page Not Found");
       return;
     });

@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { AuthService } from "../auth.service";
+import { AuthService } from "./auth.service";
 
 export class AuthServiceImpl implements AuthService {
   constructor() {}

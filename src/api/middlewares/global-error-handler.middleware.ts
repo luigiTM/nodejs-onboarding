@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ErrorHandler } from "./error-handler";
-import { EmailAlreadyInUseError } from "../errors/email-already-in-use.error";
 import { ZodError } from "zod";
+import { EmailAlreadyInUseError } from "../../errors/email-already-in-use.error";
 
 export class GlobalErrorHandler implements ErrorHandler {
   constructor() {}

@@ -13,9 +13,11 @@ export default class User extends Model {
   password!: string;
   static jsonSchema = {
     type: "object",
-    required: ["name", "password"],
+    required: ["firstName", "lastName", "email", "password"],
     properties: {
-      name: { type: "string", minLength: 1, maxLength: 50 },
+      firstName: { type: "string", minLength: 1, maxLength: 50 },
+      lastName: { type: "string", minLength: 1, maxLength: 50 },
+      name: { type: "string", minLength: 7, maxLength: 50 },
       password: { type: "string" },
     },
   };

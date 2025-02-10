@@ -1,5 +1,5 @@
-import { authServiceImpl } from "./auth.service.impl";
-import { AuthService } from "../auth.service";
+import { authServiceImpl } from "../../api/auth/auth.service.impl";
+import { AuthService } from "../../api/auth/auth.service";
 import { userRepositoryImpl } from "../../repositories/impl/user.repository.impl";
 import { Service } from "../entity.service";
 import User from "../../model/user";
