@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
-import { AuthService } from "../auth.service";
 import User from "../../model/user";
 import env from "../../config";
 import jwt from "jsonwebtoken";
+import { AuthService } from "./auth.service";
 
 export class AuthServiceImpl implements AuthService {
   constructor() {}
