@@ -2,7 +2,6 @@ import express from "express";
 import env from "../config";
 import cors from "cors";
 import morgan from "morgan";
-import { userRouter } from "./v1/user/user.routes";
 import { globalErrorHandler } from "../middlewares/global-error-handler.middleware";
 
 export class App {
@@ -36,8 +35,7 @@ export class App {
       response.send(`API version ${env.API_VERSION}`);
       return;
     });
-    // User routes
-    this.app.use("/user", userRouter.getRouter());
+
     // This should be the last route so that the endpoints that have not been implemented yet match this condition.
     // We use all here to match all the HTTP verbs
     this.app.all("*", (_request, response) => {
