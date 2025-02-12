@@ -1,15 +1,20 @@
+import { inject, injectable } from "inversify";
 import { BaseRoutes } from "../base.routes";
-import { accountController, AccountController } from "./account.controller";
+import { AccountController } from "./account.controller";
+import { AuthMiddleware } from "../../middlewares/auth.middleware";
 
-class AccountRoutes extends BaseRoutes<AccountController> {
-  constructor() {
+@injectable()
+export class AccountRoutes extends BaseRoutes<AccountController> {
+  constructor(
+    @inject(AuthMiddleware) public readonly authMiddleware: AuthMiddleware,
+    @inject(AccountController) public readonly accountController: AccountController,
+  ) {
     super(accountController);
+    this.setRoutes();
   }
+
   protected setRoutes(): void {
-    this.router.get("/account", (request, response, next) => {
-      this.controller.getAccounts(request, response, next);
-    });
+    this.router.use(this.authMiddleware.protect.bind(this.authMiddleware));
+    this.router.get("/", this.controller.getAccounts.bind(this.controller));
   }
 }
-
-export const accountRoutes = new AccountRoutes();

@@ -1,23 +1,16 @@
-import { UserController, userController } from "./user.controller";
-import { authMiddleware } from "../../middlewares/auth.middleware";
+import { UserController } from "./user.controller";
 import { BaseRoutes } from "../base.routes";
+import { inject, injectable } from "inversify";
 
-class UserRoutes extends BaseRoutes<UserController> {
-  constructor() {
+@injectable()
+export class UserRoutes extends BaseRoutes<UserController> {
+  constructor(@inject(UserController) public readonly userController: UserController) {
     super(userController);
+    this.setRoutes();
   }
 
-  protected setRoutes() {
-    this.router.post("/signin", (request, response, next) => {
-      this.controller.createUser(request, response, next);
-    });
-    this.router.post("/login", (request, response, next) => {
-      this.controller.login(request, response, next);
-    });
-    this.router.use((request, response, next) => {
-      authMiddleware.protect(request, response, next);
-    });
+  protected setRoutes(): void {
+    this.router.post("/signin", this.controller.createUser.bind(this.controller));
+    this.router.post("/login", this.controller.login.bind(this.controller));
   }
 }
-
-export const userRouter = new UserRoutes();

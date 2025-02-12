@@ -1,41 +1,50 @@
-import { authServiceImpl } from "../../api/auth/auth.service.impl";
 import { AuthService } from "../../api/auth/auth.service";
-import { userRepositoryImpl } from "../../repositories/impl/user.repository.impl";
-import { Service } from "../entity.service";
+import { UserRepositoryImpl } from "../../repositories/impl/user.repository.impl";
 import { CreateUserDto } from "../../dtos/user/create-user.dto";
-import { CreateAccountDto } from "../../dtos/account/create-account.dto";
-import Account from "../../model/account";
 import { Currencies } from "../../enums/currencies";
-import { accountServiceImpl } from "./account.service.impl";
 import { UserLoginDto } from "../../dtos/user/user-login.dto";
-import { UserRepository } from "../../repositories/user.respository";
 import { toDto, UserDto } from "../../dtos/user/user.dto";
 import { UserService } from "../user.service";
 import { UserOrPasswordError } from "../../errors/user-or-password.error";
+import { UniqueViolationError } from "objection";
+import { EmailAlreadyInUseError } from "../../errors/email-already-in-use.error";
+import { inject, injectable } from "inversify";
+import { AuthServiceImpl } from "../../api/auth/auth.service.impl";
+import { UserRepository } from "../../repositories/user.respository";
+import { AccountServiceImpl } from "./account.service.impl";
+import { AccountService } from "../account.service";
 
+@injectable()
 export class UserServiceImpl implements UserService {
-  private authService: AuthService;
-  private accountService: Service<CreateAccountDto, Account>;
-  private userRepository: UserRepository;
-
-  constructor() {
-    this.authService = authServiceImpl;
-    this.userRepository = userRepositoryImpl;
-    this.accountService = accountServiceImpl;
-  }
+  constructor(
+    @inject(AuthServiceImpl) public readonly authService: AuthService,
+    @inject(UserRepositoryImpl) public readonly userRepository: UserRepository,
+    @inject(AccountServiceImpl) public readonly accountService: AccountService,
+  ) {}
 
   public async create(newUser: CreateUserDto): Promise<UserDto> {
-    newUser.password = await this.authService.hashPassword(newUser.password);
-    const createdUser = await this.userRepository.insert(newUser);
-    // Create the accounts associated with the user
-    [Currencies.UYU, Currencies.USD, Currencies.EUR].forEach((currency_id) => {
-      this.accountService.create({
-        user_id: createdUser.id,
-        currency_id,
-        balance: 5000,
+    try {
+      newUser.password = await this.authService.hashPassword(newUser.password);
+      const createdUser = await this.userRepository.insert(newUser);
+      // Create the accounts associated with the user
+      [Currencies.UYU, Currencies.USD, Currencies.EUR].forEach((currency_id) => {
+        this.accountService.create({
+          user_id: createdUser.id,
+          currency_id,
+          balance: 5000,
+        });
       });
-    });
-    return toDto(createdUser);
+      return toDto(createdUser);
+    } catch (error) {
+      if (error instanceof UniqueViolationError) {
+        error.columns.forEach((column) => {
+          if (column == "email") {
+            throw new EmailAlreadyInUseError("There provided email is already in use");
+          }
+        });
+      }
+      throw error;
+    }
   }
 
   async login(userLogin: UserLoginDto): Promise<string> {
@@ -50,5 +59,3 @@ export class UserServiceImpl implements UserService {
     return await this.authService.createToken(user);
   }
 }
-
-export const userServiceImpl = new UserServiceImpl();

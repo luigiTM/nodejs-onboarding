@@ -1,14 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import { JwtPayload } from "jsonwebtoken";
 import { UnauthorizedError } from "../../errors/unauthorized.error";
+import { inject, injectable } from "inversify";
 import { AuthService } from "../auth/auth.service";
-import { authServiceImpl } from "../auth/auth.service.impl";
+import { AuthServiceImpl } from "../auth/auth.service.impl";
 
+@injectable()
 export class AuthMiddleware {
-  private authService: AuthService;
-  constructor() {
-    this.authService = authServiceImpl;
-  }
+  constructor(@inject(AuthServiceImpl) public readonly authService: AuthService) {}
 
   async protect(request: Request, _response: Response, next: NextFunction) {
     const cookies = request.cookies;
@@ -18,16 +17,19 @@ export class AuthMiddleware {
     } else {
       const requestHeaders = request.headers;
       if (!requestHeaders) {
-        throw new UnauthorizedError("Token not found");
+        next(new UnauthorizedError("Token not found"));
+        return;
       }
       const bearer = requestHeaders.authorization;
       if (!bearer) {
-        throw new UnauthorizedError("Token not found");
+        next(new UnauthorizedError("Token not found"));
+        return;
       }
       [, token] = bearer.split(" ");
     }
     if (!token) {
-      throw new UnauthorizedError("Token not found");
+      next(new UnauthorizedError("Token not found"));
+      return;
     }
     try {
       const result: string | JwtPayload = await this.authService.verify(token);
@@ -44,5 +46,3 @@ export class AuthMiddleware {
     }
   }
 }
-
-export const authMiddleware = new AuthMiddleware();

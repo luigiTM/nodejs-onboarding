@@ -3,7 +3,9 @@ import User from "../../model/user";
 import env from "../../config";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { AuthService } from "./auth.service";
+import { injectable } from "inversify";
 
+@injectable()
 export class AuthServiceImpl implements AuthService {
   constructor() {}
 
@@ -31,5 +33,3 @@ export class AuthServiceImpl implements AuthService {
     return jwt.verify(token, env.JWT_SECRET);
   }
 }
-
-export const authServiceImpl = new AuthServiceImpl();

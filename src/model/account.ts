@@ -9,4 +9,23 @@ export default class Account extends Model {
   user!: User;
   currency!: Currency;
   balance!: number;
+
+  static relationMappings = () => ({
+    user: {
+      relation: Model.HasOneRelation,
+      modelClass: User,
+      join: {
+        from: "account.user_id",
+        to: "user.id",
+      },
+    },
+    currency: {
+      relation: Model.HasOneRelation,
+      modelClass: Currency,
+      join: {
+        from: "account.currency_id",
+        to: "currency.id",
+      },
+    },
+  });
 }

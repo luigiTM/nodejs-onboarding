@@ -7,7 +7,6 @@ export abstract class BaseRoutes<T> {
   constructor(controller: T) {
     this.controller = controller;
     this.router = Router();
-    this.setRoutes();
   }
 
   public getRouter(): Router {

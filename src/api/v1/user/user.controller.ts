@@ -1,16 +1,14 @@
 import { Request, Response } from "express";
-import { userServiceImpl } from "../../../services/impl/user.service.impl";
 import { UserService } from "../../../services/user.service";
 import { createUserDtoSchema } from "../../../dtos/user/create-user.dto";
 import { userLoginSchema } from "../../../dtos/user/user-login.dto";
 import { safeExecute } from "../../../util/utils";
+import { inject, injectable } from "inversify";
+import { UserServiceImpl } from "../../../services/impl/user.service.impl";
 
+@injectable()
 export class UserController {
-  private userService: UserService;
-
-  constructor() {
-    this.userService = userServiceImpl;
-  }
+  constructor(@inject(UserServiceImpl) public readonly userService: UserService) {}
 
   createUser = safeExecute(async (request: Request, response: Response) => {
     const userToCreate = request.body;
@@ -27,5 +25,3 @@ export class UserController {
     response.send({ token: token });
   });
 }
-
-export const userController = new UserController();

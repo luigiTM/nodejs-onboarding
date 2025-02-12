@@ -1,24 +1,22 @@
+import { inject, injectable } from "inversify";
+import { AccountDto, toDto } from "../../dtos/account/account.dto";
 import { CreateAccountDto } from "../../dtos/account/create-account.dto";
 import { UserDto } from "../../dtos/user/user.dto";
-import Account from "../../model/account";
-import { Repository } from "../../repositories/entity.repository";
-import { accountRepositoryImpl } from "../../repositories/impl/account.repository.impl";
+import { AccountRepository } from "../../repositories/account.repository";
+import { AccountRepositoryImpl } from "../../repositories/impl/account.repository.impl";
 import { AccountService } from "../account.service";
 
+@injectable()
 export class AccountServiceImpl implements AccountService {
-  private accountRepository: Repository<CreateAccountDto, Account>;
+  constructor(@inject(AccountRepositoryImpl) public readonly accountRepository: AccountRepository) {}
 
-  constructor() {
-    this.accountRepository = accountRepositoryImpl;
+  async create(newAccount: CreateAccountDto): Promise<AccountDto> {
+    const result = await this.accountRepository.insert(newAccount);
+    return toDto(result);
   }
 
-  async create(newAccount: CreateAccountDto): Promise<Account> {
-    return await this.accountRepository.insert(newAccount);
-  }
-
-  getAccounts(user: UserDto): Account[] {
-    throw new Error("Method not implemented.");
+  async getAccounts(user: UserDto): Promise<AccountDto[]> {
+    const accounts = await this.accountRepository.getAccountsByUser(user.id);
+    return accounts.map((account) => toDto(account));
   }
 }
-
-export const accountServiceImpl = new AccountServiceImpl();
