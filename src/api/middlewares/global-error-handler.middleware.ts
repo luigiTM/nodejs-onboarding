@@ -34,7 +34,7 @@ export class GlobalErrorHandler implements ErrorHandler {
   };
 
   private createValidationErrorMessage(zodError: ZodError): string[] {
-    let response_messages: string[] = [];
+    const response_messages: string[] = [];
     zodError.issues.forEach((issue) => {
       if (issue.message == "Required") {
         response_messages.push(`Field ${issue.path} is required`);
