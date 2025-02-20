@@ -15,7 +15,11 @@ export class AccountController {
       throw new UnauthorizedError("User not logged in");
     }
     userDtoSchema.parse(userDto);
-    const userAccounts = await this.service.getAccounts(userDto);
+    const userId = request.params.userId;
+    if (userDto.id !== userId) {
+      throw new UnauthorizedError("User not logged in");
+    }
+    const userAccounts = await this.service.getAccounts(userId);
     response.send({ accounts: userAccounts });
   });
 }
