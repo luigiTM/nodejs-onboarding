@@ -4,6 +4,7 @@ import { UserRepository } from "../user.respository";
 import { Knex } from "knex";
 import { DatabaseConnector } from "../../db/database.connector";
 import { KnexConnector } from "../../db/knex/knex.connector";
+import { CreateUserDto } from "../../dtos/user/create-user.dto";
 
 @injectable()
 export class UserRepositoryImpl implements UserRepository {
@@ -11,7 +12,7 @@ export class UserRepositoryImpl implements UserRepository {
     User.knex(knexConnector.getConnector());
   }
 
-  async insert(user: User): Promise<User> {
+  async insert(user: CreateUserDto): Promise<User> {
     return await User.query().insert(user);
   }
 

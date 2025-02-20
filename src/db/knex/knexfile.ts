@@ -1,5 +1,6 @@
 import { Knex } from "knex";
 import env from "../../config";
+import { knexSnakeCaseMappers } from "objection";
 
 const config: Knex.Config = {
   client: "pg",
@@ -16,6 +17,7 @@ const config: Knex.Config = {
   seeds: {
     directory: "./../seeds",
   },
+  ...knexSnakeCaseMappers(),
 };
 
 export default config;

@@ -13,8 +13,8 @@ export class UserController {
   createUser = safeExecute(async (request: Request, response: Response) => {
     const userToCreate = request.body;
     createUserDtoSchema.parse(userToCreate);
-    const createdUser = await this.userService.create(userToCreate);
-    response.send(createdUser);
+    const userCreated = await this.userService.create(userToCreate);
+    response.send(userCreated);
   });
 
   login = safeExecute(async (request: Request, response: Response) => {

@@ -9,6 +9,7 @@ import { AccountService } from "../../../services/account.service";
 @injectable()
 export class AccountController {
   constructor(@inject(AccountServiceImpl) public readonly service: AccountService) {}
+
   getAccounts = safeExecute(async (request: Request, response: Response) => {
     const userDto = request.userDto;
     if (!userDto) {

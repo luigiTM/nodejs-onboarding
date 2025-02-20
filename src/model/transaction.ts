@@ -1,13 +1,45 @@
-import { Model } from "objection";
+import { Model, snakeCaseMappers } from "objection";
 import { Tables } from "../db/enums/tables";
 import Account from "./account";
 
 export default class Transaction extends Model {
+  static get columnNameMappers() {
+    return snakeCaseMappers();
+  }
   static tableName = Tables.transaction;
   id!: string;
-  source_account!: Account;
-  destination_account!: Account;
+  sourceAccount!: Account;
+  destinationAccount!: Account;
   amount!: number;
   description?: string;
-  created_at!: Date;
+  createdAt!: Date;
+
+  static jsonSchema = {
+    type: "object",
+    required: ["sourceAccount", "destinationAccount", "amount"],
+    properties: {
+      sourceAccount: { type: "string" },
+      destinationAccount: { type: "string" },
+      amount: { type: "number" },
+    },
+  };
+
+  static relationMappings = () => ({
+    sourceAccount: {
+      relation: Model.HasOneRelation,
+      modelClass: Account,
+      join: {
+        from: "transaction.source_account",
+        to: "account.id",
+      },
+      destinationAccount: {
+        relation: Model.HasOneRelation,
+        modelClass: Account,
+        join: {
+          from: "transaction.destination_account",
+          to: "account.id",
+        },
+      },
+    },
+  });
 }

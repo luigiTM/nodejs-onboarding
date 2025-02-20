@@ -7,17 +7,20 @@ import { globalErrorHandler } from "./middlewares/error-handler/global-error-han
 import { UserRoutes } from "./v1/user/user.routes";
 import { Container } from "inversify";
 import { AccountRoutes } from "./v1/account/account.routes";
+import { TransactionRoutes } from "./v1/transaction/transaction.routes";
 
 export class App {
   private app = express();
   private container: Container;
   private userRouter: UserRoutes;
   private accountRouter: AccountRoutes;
+  private transactionRouter: TransactionRoutes;
 
   constructor(container: Container) {
     this.container = container;
     this.userRouter = this.container.get(UserRoutes);
     this.accountRouter = this.container.get(AccountRoutes);
+    this.transactionRouter = this.container.get(TransactionRoutes);
     this.setMiddlewares();
     this.setRoutes();
     this.setErrorHandlers();
@@ -54,6 +57,8 @@ export class App {
 
     // Account routes
     this.app.use("/account", this.accountRouter.getRouter());
+
+    this.app.use("/transaction", this.transactionRouter.getRouter());
 
     // This should be the last route so that the endpoints that have not been implemented yet match this condition.
     // We use all here to match all the HTTP verbs
