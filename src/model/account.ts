@@ -1,6 +1,6 @@
 import { Model } from "objection";
-import { Tables } from "../db/tables";
-import User from "./user/user";
+import { Tables } from "../enums/tables";
+import User from "./user";
 import Currency from "./currency";
 
 export default class Account extends Model {

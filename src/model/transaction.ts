@@ -1,5 +1,5 @@
 import { Model } from "objection";
-import { Tables } from "../db/tables";
+import { Tables } from "../enums/tables";
 import Account from "./account";
 
 export default class Transaction extends Model {
