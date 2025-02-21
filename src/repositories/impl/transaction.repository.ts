@@ -16,6 +16,6 @@ export class TransactionRepositoryImpl implements Repository<CreateTransactionDt
   async insert(newTransaction: CreateTransactionDto): Promise<Transaction> {
     const { parse } = snakeCaseMappers();
     const transactionData = parse(newTransaction);
-    return await Transaction.query().insert(transactionData).returning("*");
+    return await Transaction.query().insert(transactionData);
   }
 }

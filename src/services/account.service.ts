@@ -4,4 +4,5 @@ import { Service } from "./entity.service";
 
 export interface AccountService extends Service<CreateAccountDto, AccountDto> {
   getAccounts(userId: string): Promise<AccountDto[]>;
+  // getAccountById(accountId: string): Promise<AccountDto>;
 }
