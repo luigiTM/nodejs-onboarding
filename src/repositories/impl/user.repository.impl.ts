@@ -1,10 +1,14 @@
-import knexConnector from "../../db/knex.connector";
+import { inject, injectable } from "inversify";
 import User from "../../model/user";
 import { UserRepository } from "../user.respository";
+import { Knex } from "knex";
+import { DatabaseConnector } from "../../db/database.connector";
+import { KnexConnector } from "../../db/knex/knex.connector";
 
+@injectable()
 export class UserRepositoryImpl implements UserRepository {
-  constructor() {
-    User.knex(knexConnector);
+  constructor(@inject(KnexConnector) public readonly knexConnector: DatabaseConnector<Knex>) {
+    User.knex(knexConnector.getConnector());
   }
 
   async insert(user: User): Promise<User> {
@@ -15,5 +19,3 @@ export class UserRepositoryImpl implements UserRepository {
     return await User.query().findOne({ email: user_email });
   }
 }
-
-export const userRepositoryImpl = new UserRepositoryImpl();
