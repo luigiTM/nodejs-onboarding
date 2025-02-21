@@ -27,10 +27,10 @@ export class UserServiceImpl implements UserService {
       newUser.password = await this.authService.hashPassword(newUser.password);
       const createdUser = await this.userRepository.insert(newUser);
       // Create the accounts associated with the user
-      [Currencies.UYU, Currencies.USD, Currencies.EUR].forEach((currency_id) => {
+      [Currencies.UYU, Currencies.USD, Currencies.EUR].forEach((currencyId) => {
         this.accountService.create({
-          user_id: createdUser.id,
-          currency_id,
+          userId: createdUser.id,
+          currencyId,
           balance: 5000,
         });
       });
