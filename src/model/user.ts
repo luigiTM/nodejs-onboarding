@@ -1,10 +1,7 @@
-import { Model, snakeCaseMappers } from "objection";
+import { Model } from "objection";
 import { Tables } from "../enums/tables";
 
 export default class User extends Model {
-  static get columnNameMappers() {
-    return snakeCaseMappers();
-  }
   static tableName = Tables.user;
   id!: string;
   firstName!: string;

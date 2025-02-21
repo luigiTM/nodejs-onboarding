@@ -31,6 +31,9 @@ class UserRoutes {
     this.userRouter.post("/signup", (request, response, next) => {
       this.userController.createUser(request, response, next);
     });
+    this.userRouter.post("/login", (request, response, next) => {
+      this.userController.login(request, response, next);
+    });
   }
 }
 

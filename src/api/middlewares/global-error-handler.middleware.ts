@@ -3,13 +3,14 @@ import { StatusCodes } from "http-status-codes";
 import { ErrorHandler } from "./error-handler";
 import { ZodError } from "zod";
 import { EmailAlreadyInUseError } from "../../errors/email-already-in-use.error";
+import { UserOrPasswordError } from "../../errors/user-or-password.error";
 
 export class GlobalErrorHandler implements ErrorHandler {
   constructor() {}
 
   public handleError = (
     error: Error,
-    request: Request,
+    _request: Request,
     response: Response,
     next: NextFunction,
   ) => {
@@ -21,15 +22,19 @@ export class GlobalErrorHandler implements ErrorHandler {
     } else if (error instanceof EmailAlreadyInUseError) {
       status = StatusCodes.CONFLICT;
       messages.push(error.message);
+    } else if (error instanceof UserOrPasswordError) {
+      status = StatusCodes.UNAUTHORIZED;
+      messages.push(error.message);
     } else {
       console.log(error);
       messages.push("Something went wrong");
     }
     response.status(status).send({ messages: messages });
+    next();
   };
 
   private createValidationErrorMessage(zodError: ZodError): string[] {
-    let response_messages: string[] = [];
+    const response_messages: string[] = [];
     zodError.issues.forEach((issue) => {
       if (issue.message == "Required") {
         response_messages.push(`Field ${issue.path} is required`);

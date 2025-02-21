@@ -1,5 +1,3 @@
-import { CreateDto } from "../dtos/create.dto";
-
-export interface Service<T extends CreateDto, K> {
+export interface Service<T, K> {
   create(entity: T): Promise<K>;
 }

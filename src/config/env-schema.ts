@@ -15,6 +15,7 @@ export const envVarsSchema = z.object({
     (api_version) => parseInt(api_version as string, 10),
     z.number().positive(),
   ),
+  JWT_SECRET: z.preprocess((jwtSecret) => jwtSecret, z.string()),
   DATABASE_URL: z.preprocess((database_url) => database_url, z.string()),
   DATABASE_PORT: z.preprocess(
     (database_port) => parseInt(database_port as string, 10),

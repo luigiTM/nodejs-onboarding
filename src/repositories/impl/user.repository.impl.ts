@@ -1,15 +1,18 @@
 import knexConnector from "../../db/knex.connector";
-import { CreateUserDto } from "../../dtos/user/create-user.dto";
 import User from "../../model/user";
-import { Repository } from "../entity.repository";
+import { UserRepository } from "../user.respository";
 
-export class UserRepositoryImpl implements Repository<CreateUserDto, User> {
+export class UserRepositoryImpl implements UserRepository {
   constructor() {
     User.knex(knexConnector);
   }
 
-  public async insert(user: User): Promise<User> {
+  async insert(user: User): Promise<User> {
     return await User.query().insert(user);
+  }
+
+  async findByEmail(user_email: string): Promise<User | undefined> {
+    return await User.query().findOne({ email: user_email });
   }
 }
 
