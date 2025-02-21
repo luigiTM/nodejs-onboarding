@@ -14,15 +14,15 @@ export default class Transaction extends Model {
   description?: string;
   createdAt!: Date;
 
-  static jsonSchema = {
-    type: "object",
-    required: ["sourceAccount", "destinationAccount", "amount"],
-    properties: {
-      sourceAccount: { type: "string" },
-      destinationAccount: { type: "string" },
-      amount: { type: "number" },
-    },
-  };
+  // static jsonSchema = {
+  //   type: "object",
+  //   required: ["sourceAccount", "destinationAccount", "amount"],
+  //   properties: {
+  //     sourceAccount: { type: "string" },
+  //     destinationAccount: { type: "string" },
+  //     amount: { type: "number" },
+  //   },
+  // };
 
   static relationMappings = () => ({
     sourceAccount: {
