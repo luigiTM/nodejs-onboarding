@@ -1,9 +1,11 @@
 import bcrypt from "bcrypt";
 import User from "../../model/user";
 import env from "../../config";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { AuthService } from "./auth.service";
+import { injectable } from "inversify";
 
+@injectable()
 export class AuthServiceImpl implements AuthService {
   constructor() {}
 
@@ -11,10 +13,7 @@ export class AuthServiceImpl implements AuthService {
     return bcrypt.hash(plainPassword, 12);
   }
 
-  async comparePassword(
-    plainPassword: string,
-    hashedPassword: string,
-  ): Promise<boolean> {
+  async comparePassword(plainPassword: string, hashedPassword: string): Promise<boolean> {
     return bcrypt.compare(plainPassword, hashedPassword);
   }
 
@@ -29,6 +28,8 @@ export class AuthServiceImpl implements AuthService {
       env.JWT_SECRET,
     );
   }
-}
 
-export const authServiceImpl = new AuthServiceImpl();
+  async verify(token: string): Promise<string | JwtPayload> {
+    return jwt.verify(token, env.JWT_SECRET);
+  }
+}
