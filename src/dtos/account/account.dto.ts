@@ -7,7 +7,7 @@ export interface AccountDto {
   balance: number;
 }
 
-export const toDto = (account: Account) => {
+export const toDto = (account: Account): AccountDto => {
   return {
     id: account.id,
     userId: account.user.id,
