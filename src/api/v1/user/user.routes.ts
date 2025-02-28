@@ -10,7 +10,7 @@ export class UserRoutes extends BaseRoutes<UserController> {
   }
 
   protected setRoutes(): void {
-    this.router.post("/signin", this.controller.createUser.bind(this.controller));
+    this.router.post("/signup", this.controller.createUser.bind(this.controller));
     this.router.post("/login", this.controller.login.bind(this.controller));
   }
 }

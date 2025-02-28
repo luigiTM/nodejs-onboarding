@@ -4,20 +4,12 @@ import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import { globalErrorHandler } from "./middlewares/error-handler/global-error-handler.middleware";
-import { UserRoutes } from "./v1/user/user.routes";
-import { Container } from "inversify";
-import { AccountRoutes } from "./v1/account/account.routes";
+import router from ".";
 
 export class App {
   private app = express();
-  private container: Container;
-  private userRouter: UserRoutes;
-  private accountRouter: AccountRoutes;
 
-  constructor(container: Container) {
-    this.container = container;
-    this.userRouter = this.container.get(UserRoutes);
-    this.accountRouter = this.container.get(AccountRoutes);
+  constructor() {
     this.setMiddlewares();
     this.setRoutes();
     this.setErrorHandlers();
@@ -49,11 +41,7 @@ export class App {
       return;
     });
 
-    // User routes
-    this.app.use("/user", this.userRouter.getRouter());
-
-    // Account routes
-    this.app.use("/account", this.accountRouter.getRouter());
+    this.app.use(router);
 
     // This should be the last route so that the endpoints that have not been implemented yet match this condition.
     // We use all here to match all the HTTP verbs
