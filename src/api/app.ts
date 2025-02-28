@@ -58,6 +58,7 @@ export class App {
     // Account routes
     this.app.use("/account", this.accountRouter.getRouter());
 
+    // Transaction routes
     this.app.use("/transaction", this.transactionRouter.getRouter());
 
     // This should be the last route so that the endpoints that have not been implemented yet match this condition.

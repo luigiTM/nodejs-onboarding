@@ -19,4 +19,12 @@ export class AccountRepositoryImpl implements AccountRepository {
   async getAccountsByUser(userId: string): Promise<Account[]> {
     return await Account.query().where("user_id", userId).withGraphFetched("currency");
   }
+
+  async getById(entityId: string): Promise<Account | undefined> {
+    return await Account.query().findById(entityId);
+  }
+
+  async updateAccountBalance(accountId: string, newBalance: number): Promise<number> {
+    return await Account.query().update({ balance: newBalance }).where("id", accountId);
+  }
 }
