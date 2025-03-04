@@ -27,13 +27,14 @@ export class UserServiceImpl implements UserService {
       newUser.password = await this.authService.hashPassword(newUser.password);
       const createdUser = await this.userRepository.insert(newUser);
       // Create the accounts associated with the user
-      [Currencies.UYU, Currencies.USD, Currencies.EUR].forEach(async (currencyId) => {
+      const promises = [Currencies.UYU, Currencies.USD, Currencies.EUR].map(async (currencyId) => {
         await this.accountService.create({
           userId: createdUser.id,
           currencyId,
           balance: 5000,
         });
       });
+      await Promise.all(promises);
       return toDto(createdUser);
     } catch (error) {
       if (error instanceof UniqueViolationError) {

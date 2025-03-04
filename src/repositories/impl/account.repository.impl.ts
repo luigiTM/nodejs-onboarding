@@ -13,10 +13,10 @@ export class AccountRepositoryImpl implements AccountRepository {
   }
 
   async insert(newAccount: CreateAccountDto): Promise<Account> {
-    return await Account.query().insert(newAccount).withGraphFetched("currency");
+    return await Account.query().insert(newAccount).withGraphJoined("[user, currency]");
   }
 
   async getAccountsByUser(userId: string): Promise<Account[]> {
-    return await Account.query().where("user_id", userId).withGraphFetched("currency");
+    return await Account.query().where("user_id", userId).withGraphJoined("[user, currency]");
   }
 }
