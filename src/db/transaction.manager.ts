@@ -9,12 +9,10 @@ export class TransactionManager {
     try {
       const result = await callback(transaction);
       await transaction.commit();
-      console.log("Transaction committed");
       return result;
     } catch (error) {
       console.log(error);
       await transaction.rollback();
-      console.log("Transaction rolled back");
       throw error;
     }
   }

@@ -6,7 +6,7 @@ export async function up(knex: Knex) {
     table.uuid("id").primary().defaultTo(knex.fn.uuid()).index();
     table.uuid("source_account_id").references("id").inTable("account").index();
     table.uuid("destination_account_id").references("id").inTable("account").index();
-    table.specificType("amount", "money").notNullable();
+    table.decimal("amount", 10, 2).notNullable();
     table.string("description", 150);
     table.dateTime("created_at").notNullable().defaultTo(knex.fn.now());
   });

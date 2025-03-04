@@ -21,8 +21,8 @@ const config: Knex.Config = {
   ...knexSnakeCaseMappers(),
 };
 
-pg.types.setTypeParser(pg.types.builtins.MONEY, (value: string) => {
-  return parseFloat(value.replace("$", "").replace(",", ""));
+pg.types.setTypeParser(pg.types.builtins.NUMERIC, (value: string) => {
+  return parseFloat(value);
 });
 
 export default config;

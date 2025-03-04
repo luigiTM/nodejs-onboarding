@@ -44,7 +44,7 @@ export class TransactionServiceImpl implements TransactionService {
     }
     let newSourceAccountBalance = sourceAccount.balance - newTransaction.amount;
     if (sourceAccount.userId !== destinationAccount.userId) {
-      newSourceAccountBalance *= 1 - TRANSACTION_FEE;
+      newSourceAccountBalance -= TRANSACTION_FEE * newTransaction.amount;
     }
     await this.accountService.updateAccountBalance(newTransaction.sourceAccountId, newSourceAccountBalance, transaction);
     const newDestinationAccountBalance = destinationAccount.balance + newTransaction.amount * this.conversionService.getConversionRate(sourceAccount.currencyId, destinationAccount.currencyId);
