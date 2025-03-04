@@ -5,6 +5,7 @@ import { AccountRepository } from "../../repositories/account.repository";
 import { AccountRepositoryImpl } from "../../repositories/impl/account.repository.impl";
 import { AccountService } from "../account.service";
 import { UpdateError } from "../../errors/update.error";
+import { Knex } from "knex";
 
 @injectable()
 export class AccountServiceImpl implements AccountService {
@@ -28,8 +29,8 @@ export class AccountServiceImpl implements AccountService {
     return undefined;
   }
 
-  async updateAccountBalance(accountId: string, newBalance: number): Promise<void> {
-    const affectedRows = await this.repository.updateAccountBalance(accountId, newBalance);
+  async updateAccountBalance(accountId: string, newBalance: number, transaction?: Knex.Transaction): Promise<void> {
+    const affectedRows = await this.repository.updateAccountBalance(accountId, newBalance, transaction);
     if (affectedRows === 0 || affectedRows > 1) {
       throw new UpdateError(`Invalid number for updated rows: ${affectedRows}`);
     }

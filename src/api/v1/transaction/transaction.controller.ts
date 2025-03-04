@@ -14,8 +14,7 @@ export class TransactionController {
     createTransactionDtoSchema.parse(request.body);
     const userDto = userDtoSchema.parse(request.userDto);
     const newTransaction = request.body as CreateTransactionDto;
-    this.service.validateNewTransaction(userDto, newTransaction);
-    const transactionCreated = this.service.create(newTransaction);
-    response.send(transactionCreated);
+    const transactionCreated = await this.service.validateAndCreate(userDto, newTransaction);
+    response.json(transactionCreated);
   });
 }

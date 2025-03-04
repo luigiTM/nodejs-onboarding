@@ -1,6 +1,7 @@
 import { Knex } from "knex";
 import env from "../../config";
 import { knexSnakeCaseMappers } from "objection";
+import pg from "pg";
 
 const config: Knex.Config = {
   client: "pg",
@@ -19,5 +20,9 @@ const config: Knex.Config = {
   },
   ...knexSnakeCaseMappers(),
 };
+
+pg.types.setTypeParser(pg.types.builtins.MONEY, (value: string) => {
+  return parseFloat(value.replace("$", "").replace(",", ""));
+});
 
 export default config;

@@ -13,18 +13,21 @@ export class AccountRepositoryImpl implements AccountRepository {
   }
 
   async insert(newAccount: CreateAccountDto): Promise<Account> {
-    return await Account.query().insert(newAccount).withGraphFetched("currency");
+    return await Account.query().insert(newAccount).withGraphJoined("[user, currency]");
   }
 
   async getAccountsByUser(userId: string): Promise<Account[]> {
-    return await Account.query().where("user_id", userId).withGraphFetched("currency");
+    return await Account.query().where("user_id", userId).withGraphJoined("[user, currency]");
   }
 
   async getById(entityId: string): Promise<Account | undefined> {
-    return await Account.query().findById(entityId);
+    return await Account.query().findById(entityId).withGraphJoined("[user, currency]");
   }
 
-  async updateAccountBalance(accountId: string, newBalance: number): Promise<number> {
+  async updateAccountBalance(accountId: string, newBalance: number, transaction?: Knex.Transaction): Promise<number> {
+    if (transaction) {
+      return await Account.query(transaction).update({ balance: newBalance }).where("id", accountId);
+    }
     return await Account.query().update({ balance: newBalance }).where("id", accountId);
   }
 }

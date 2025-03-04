@@ -4,7 +4,6 @@ export interface CreateTransactionDto {
   sourceAccountId: string;
   destinationAccountId: string;
   amount: number;
-  convertedAmount?: number;
   description: string;
 }
 

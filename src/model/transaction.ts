@@ -29,14 +29,14 @@ export default class Transaction extends Model {
       relation: Model.HasOneRelation,
       modelClass: Account,
       join: {
-        from: "transaction.source_account",
+        from: "transaction.source_account_id",
         to: "account.id",
       },
       destinationAccount: {
         relation: Model.HasOneRelation,
         modelClass: Account,
         join: {
-          from: "transaction.destination_account",
+          from: "transaction.destination_account_id",
           to: "account.id",
         },
       },
