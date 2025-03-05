@@ -1,3 +1,5 @@
+import { ConversionRateDto } from "../dtos/conversion/conversion-rate.dto";
+
 export interface ConversionService {
-  getConversionRate(originCurrencyId: number, destinationCurrencyId: number): number;
+  getConversionRate(baseCurrency: string, toCurrencies: [string]): Promise<ConversionRateDto>;
 }

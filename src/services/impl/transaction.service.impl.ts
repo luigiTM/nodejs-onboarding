@@ -42,12 +42,13 @@ export class TransactionServiceImpl implements TransactionService {
     if (sourceAccount.balance < newTransaction.amount) {
       throw new InsufficientBalanceError("Source account does not have sufficient balance for this transaction");
     }
+    const conversionRate = await this.conversionService.getConversionRate(sourceAccount.currency, [destinationAccount.currency]);
     let newSourceAccountBalance = sourceAccount.balance - newTransaction.amount;
     if (sourceAccount.userId !== destinationAccount.userId) {
       newSourceAccountBalance -= TRANSACTION_FEE * newTransaction.amount;
     }
+    const newDestinationAccountBalance = destinationAccount.balance + newTransaction.amount * conversionRate.conversionRates[destinationAccount.currency];
     await this.accountService.updateAccountBalance(newTransaction.sourceAccountId, newSourceAccountBalance, transaction);
-    const newDestinationAccountBalance = destinationAccount.balance + newTransaction.amount * this.conversionService.getConversionRate(sourceAccount.currencyId, destinationAccount.currencyId);
     await this.accountService.updateAccountBalance(newTransaction.destinationAccountId, newDestinationAccountBalance, transaction);
     return await this.create(newTransaction, transaction);
   }
