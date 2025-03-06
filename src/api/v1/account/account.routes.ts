@@ -15,6 +15,5 @@ export class AccountRoutes extends BaseRoutes<AccountController> {
 
   protected setRoutes(): void {
     this.router.use(this.authMiddleware.protect.bind(this.authMiddleware));
-    this.router.get("", this.accountController.getAccounts.bind(this.accountController));
   }
 }
