@@ -37,7 +37,7 @@ export class UserController {
     const validUserDto = userDtoSchema.parse(userDto);
     const userId = request.params.userId;
     if (validUserDto.id !== userId) {
-      throw new InvalidUserError("The requested accounts does not belong to this user");
+      throw new InvalidUserError("The provided used Id does not match the logged user Id");
     }
     const userAccounts = await this.accountService.getAccounts(validUserDto.id);
     response.send({ accounts: userAccounts });
