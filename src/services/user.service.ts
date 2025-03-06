@@ -6,4 +6,5 @@ import { Service } from "./entity.service";
 
 export interface UserService extends Service<CreateUserDto, UserDto, Knex.Transaction> {
   login(userLogin: UserLoginDto, transaction?: Knex.Transaction): Promise<string>;
+  getUserByEmail(userEmail: string, transaction?: Knex.Transaction): Promise<UserDto | undefined>;
 }

@@ -14,9 +14,8 @@ import { Transactional } from "../../decorators/transactional.decorator";
 import { Knex } from "knex";
 import { ConversionServiceImpl } from "./conversion.service.impl";
 import { ConversionService } from "../conversion.service";
-
-// The transaction fee to transfer to an account that does not belong to the current user
-const TRANSACTION_FEE = 0.01;
+import { FeeServiceImpl } from "./fee.service.impl";
+import { FeeService } from "../fee.service";
 
 @injectable()
 export class TransactionServiceImpl implements TransactionService {
@@ -24,6 +23,7 @@ export class TransactionServiceImpl implements TransactionService {
     @inject(TransactionRepositoryImpl) public readonly transactionRepository: Repository<string, CreateTransactionDto, Transaction, Knex.Transaction>,
     @inject(AccountServiceImpl) public readonly accountService: AccountService,
     @inject(ConversionServiceImpl) public readonly conversionService: ConversionService,
+    @inject(FeeServiceImpl) public readonly feeService: FeeService,
   ) {}
 
   @Transactional()
@@ -45,7 +45,9 @@ export class TransactionServiceImpl implements TransactionService {
     const conversionRate = await this.conversionService.getConversionRate(sourceAccount.currency, [destinationAccount.currency]);
     let newSourceAccountBalance = sourceAccount.balance - newTransaction.amount;
     if (sourceAccount.userId !== destinationAccount.userId) {
-      newSourceAccountBalance -= TRANSACTION_FEE * newTransaction.amount;
+      const transactionFee = this.feeService.calculateFee(newTransaction.amount);
+      newSourceAccountBalance -= transactionFee;
+      this.feeService.sendFeeToAccount(transactionFee, sourceAccount.currency);
     }
     const newDestinationAccountBalance = destinationAccount.balance + newTransaction.amount * conversionRate.conversionRates[destinationAccount.currency];
     await this.accountService.updateAccountBalance(newTransaction.sourceAccountId, newSourceAccountBalance, transaction);
