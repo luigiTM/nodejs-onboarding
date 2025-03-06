@@ -2,8 +2,9 @@ import express from "express";
 import env from "../config";
 import cors from "cors";
 import morgan from "morgan";
-import { userRouter } from "./v1/user/user.routes";
-import { globalErrorHandler } from "./middlewares/global-error-handler.middleware";
+import cookieParser from "cookie-parser";
+import { globalErrorHandler } from "./middlewares/error-handler/global-error-handler.middleware";
+import router from ".";
 
 export class App {
   private app = express();
@@ -22,6 +23,9 @@ export class App {
     // Allows the server to receive json
     this.app.use(express.json());
 
+    // Parse cookies raw string to a key-value
+    this.app.use(cookieParser());
+
     // Allows the use of queries on the URL
     this.app.use(express.urlencoded({ extended: true }));
 
@@ -37,8 +41,7 @@ export class App {
       return;
     });
 
-    // User routes
-    this.app.use("/user", userRouter.getRouter());
+    this.app.use(router);
 
     // This should be the last route so that the endpoints that have not been implemented yet match this condition.
     // We use all here to match all the HTTP verbs
