@@ -5,10 +5,17 @@ import { userLoginSchema } from "../../../dtos/user/user-login.dto";
 import { safeExecute } from "../../../util/utils";
 import { inject, injectable } from "inversify";
 import { UserServiceImpl } from "../../../services/impl/user.service.impl";
+import { userDtoSchema } from "../../../dtos/user/user.dto";
+import { AccountServiceImpl } from "../../../services/impl/account.service.impl";
+import { AccountService } from "../../../services/account.service";
+import { InvalidUserError } from "../../../errors/invalid-user.error";
 
 @injectable()
 export class UserController {
-  constructor(@inject(UserServiceImpl) public readonly userService: UserService) {}
+  constructor(
+    @inject(UserServiceImpl) public readonly userService: UserService,
+    @inject(AccountServiceImpl) public readonly accountService: AccountService,
+  ) {}
 
   createUser = safeExecute(async (request: Request, response: Response) => {
     const userToCreate = request.body;
@@ -23,5 +30,16 @@ export class UserController {
     const token = await this.userService.login(userLogin);
     response.cookie("authcookie", token, { maxAge: 3600000, httpOnly: true });
     response.send({ token: token });
+  });
+
+  getAccounts = safeExecute(async (request: Request, response: Response) => {
+    const userDto = request.userDto;
+    const validUserDto = userDtoSchema.parse(userDto);
+    const userId = request.params.userId;
+    if (validUserDto.id !== userId) {
+      throw new InvalidUserError("The requested accounts does not belong to this user");
+    }
+    const userAccounts = await this.accountService.getAccounts(validUserDto.id);
+    response.send({ accounts: userAccounts });
   });
 }
