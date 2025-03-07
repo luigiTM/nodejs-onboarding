@@ -1,3 +1,3 @@
-export interface Service<T, K> {
-  create(entity: T): Promise<K>;
+export interface Service<T, K, Q> {
+  create(entity: T, dbTransaction?: Q): Promise<K>;
 }

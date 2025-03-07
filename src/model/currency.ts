@@ -3,6 +3,6 @@ import { Tables } from "../db/enums/tables";
 
 export default class Currency extends Model {
   static tableName = Tables.currency;
-  id!: string;
+  id!: number;
   acronym!: string;
 }

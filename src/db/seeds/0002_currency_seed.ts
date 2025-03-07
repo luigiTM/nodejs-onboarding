@@ -4,8 +4,8 @@ import { Currencies } from "../../enums/currencies";
 export async function seed(knex: Knex) {
   await knex("currency").insert([
     {
-      id: Currencies.UYU,
-      acronym: "UYU",
+      id: Currencies.BRL,
+      acronym: "BRL",
     },
     {
       id: Currencies.USD,

@@ -5,6 +5,10 @@ import { ZodError } from "zod";
 import { EmailAlreadyInUseError } from "../../../errors/email-already-in-use.error";
 import { UnauthorizedError } from "../../../errors/unauthorized.error";
 import { UserOrPasswordError } from "../../../errors/user-or-password.error";
+import { DataNotFoundError } from "../../../errors/data-not-found.error";
+import { InsufficientBalanceError } from "../../../errors/insufficient-balance.error";
+import { CurrencyConversionError } from "../../../errors/currency-conversion.error";
+import { InvalidUserError } from "../../../errors/invalid-user.error";
 
 export class GlobalErrorHandler implements ErrorHandler {
   constructor() {}
@@ -23,6 +27,17 @@ export class GlobalErrorHandler implements ErrorHandler {
       messages.push(error.message);
     } else if (error instanceof UnauthorizedError) {
       status = StatusCodes.UNAUTHORIZED;
+      messages.push(error.message);
+    } else if (error instanceof DataNotFoundError) {
+      status = StatusCodes.NOT_FOUND;
+      messages.push(error.message);
+    } else if (error instanceof InvalidUserError) {
+      status = StatusCodes.FORBIDDEN;
+      messages.push(error.message);
+    } else if (error instanceof InsufficientBalanceError) {
+      status = StatusCodes.UNPROCESSABLE_ENTITY;
+      messages.push(error.message);
+    } else if (error instanceof CurrencyConversionError) {
       messages.push(error.message);
     } else {
       console.log(error);
