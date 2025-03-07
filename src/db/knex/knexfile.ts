@@ -21,6 +21,7 @@ const config: Knex.Config = {
   ...knexSnakeCaseMappers(),
 };
 
+// This needs to be done because float point numbers returns as string from the database, this line ensures we receive a number
 pg.types.setTypeParser(pg.types.builtins.NUMERIC, (value: string) => {
   return parseFloat(value);
 });

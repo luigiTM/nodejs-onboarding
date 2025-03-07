@@ -10,8 +10,6 @@ interface ConversionResponse {
   data: { [currencyName: string]: number };
 }
 
-const FREE_CURRENCY_API_URL = "https://api.freecurrencyapi.com/v1/";
-
 @injectable()
 export class ConversionServiceImpl implements ConversionService {
   private cache: Cache<ConversionRatesDto>;
@@ -25,7 +23,7 @@ export class ConversionServiceImpl implements ConversionService {
     const notCached = toCurrencies.filter((currency) => !cachedConversionRates?.conversionRates[currency]);
     if (notCached.length > 0) {
       const parameters = `&currencies=${notCached}&base_currency=${baseCurrency}`;
-      const fetchUrl = `${FREE_CURRENCY_API_URL}latest?${parameters}`;
+      const fetchUrl = `${env.FREE_CURRENCY_API_URL}latest?${parameters}`;
       const response = await fetch(fetchUrl, { headers: { apiKey: env.FREE_CURRENCY_API_KEY } });
       if (!response.ok) {
         const responseData = await response.json();

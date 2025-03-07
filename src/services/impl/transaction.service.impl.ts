@@ -27,15 +27,15 @@ export class TransactionServiceImpl implements TransactionService {
   ) {}
 
   @Transactional()
-  async validateAndCreate(userDto: UserDto, newTransaction: CreateTransactionDto, transaction?: Knex.Transaction): Promise<Transaction> {
-    const sourceAccount = await this.accountService.getAccountById(newTransaction.sourceAccountId, transaction);
+  async validateAndCreate(userDto: UserDto, newTransaction: CreateTransactionDto, dbTransaction?: Knex.Transaction): Promise<Transaction> {
+    const sourceAccount = await this.accountService.getAccountById(newTransaction.sourceAccountId, dbTransaction);
     if (!sourceAccount) {
       throw new DataNotFoundError("Source account not found");
     }
     if (sourceAccount.userId !== userDto.id) {
       throw new UnauthorizedError("Invalid user");
     }
-    const destinationAccount = await this.accountService.getAccountById(newTransaction.destinationAccountId, transaction);
+    const destinationAccount = await this.accountService.getAccountById(newTransaction.destinationAccountId, dbTransaction);
     if (!destinationAccount) {
       throw new DataNotFoundError("Destination account not found");
     }
@@ -47,15 +47,15 @@ export class TransactionServiceImpl implements TransactionService {
     if (sourceAccount.userId !== destinationAccount.userId) {
       const transactionFee = this.feeService.calculateFee(newTransaction.amount);
       newSourceAccountBalance -= transactionFee;
-      this.feeService.sendFeeToAccount(transactionFee, sourceAccount.currency);
+      this.feeService.sendFeeToAccount(transactionFee, sourceAccount.currency, dbTransaction);
     }
     const newDestinationAccountBalance = destinationAccount.balance + newTransaction.amount * conversionRate.conversionRates[destinationAccount.currency];
-    await this.accountService.updateAccountBalance(newTransaction.sourceAccountId, newSourceAccountBalance, transaction);
-    await this.accountService.updateAccountBalance(newTransaction.destinationAccountId, newDestinationAccountBalance, transaction);
-    return await this.create(newTransaction, transaction);
+    await this.accountService.updateAccountBalance(newTransaction.sourceAccountId, newSourceAccountBalance, dbTransaction);
+    await this.accountService.updateAccountBalance(newTransaction.destinationAccountId, newDestinationAccountBalance, dbTransaction);
+    return await this.create(newTransaction, dbTransaction);
   }
 
-  async create(newTransaction: CreateTransactionDto, transaction?: Knex.Transaction): Promise<Transaction> {
-    return await this.transactionRepository.insert(newTransaction, transaction);
+  async create(newTransaction: CreateTransactionDto, dbTransaction?: Knex.Transaction): Promise<Transaction> {
+    return await this.transactionRepository.insert(newTransaction, dbTransaction);
   }
 }

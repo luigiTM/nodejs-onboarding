@@ -8,8 +8,6 @@ import { UserServiceImpl } from "./user.service.impl";
 import { UserService } from "../user.service";
 import { DataNotFoundError } from "../../errors/data-not-found.error";
 
-const FEE_PERCENTAGE = env.TRANSACTION_FEE_PERCENTAGE;
-
 @injectable()
 export class FeeServiceImpl implements FeeService {
   constructor(
@@ -18,10 +16,10 @@ export class FeeServiceImpl implements FeeService {
   ) {}
 
   calculateFee(amountTransferred: number): number {
-    return amountTransferred * FEE_PERCENTAGE;
+    return amountTransferred * env.TRANSACTION_FEE_PERCENTAGE;
   }
 
-  async sendFeeToAccount(feeValue: number, currency: string, transaction?: Knex.Transaction): Promise<void> {
+  async sendFeeToAccount(feeValue: number, currency: string, dbTransaction?: Knex.Transaction): Promise<void> {
     const feesUserAccount = env.FEES_ACCOUNT_EMAIL;
     const user = await this.userService.getUserByEmail(feesUserAccount);
     if (!user) {
@@ -32,6 +30,6 @@ export class FeeServiceImpl implements FeeService {
     if (!currencyAccount) {
       throw new DataNotFoundError("Fees account not found");
     }
-    this.accountService.updateAccountBalance(currencyAccount.id, currencyAccount.balance + feeValue, transaction);
+    this.accountService.updateAccountBalance(currencyAccount.id, currencyAccount.balance + feeValue, dbTransaction);
   }
 }

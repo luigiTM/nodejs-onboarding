@@ -12,8 +12,8 @@ export class UserRepositoryImpl implements UserRepository {
     User.knex(knexConnector.getConnector());
   }
 
-  getById(entityId: string): Promise<User | undefined> {
-    throw new Error("Method not implemented.");
+  async getById(entityId: string): Promise<User | undefined> {
+    return await User.query().findById(entityId);
   }
 
   async insert(user: CreateUserDto): Promise<User> {

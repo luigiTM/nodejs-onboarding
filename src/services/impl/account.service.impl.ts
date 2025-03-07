@@ -29,8 +29,8 @@ export class AccountServiceImpl implements AccountService {
     return undefined;
   }
 
-  async updateAccountBalance(accountId: string, newBalance: number, transaction?: Knex.Transaction): Promise<void> {
-    const affectedRows = await this.repository.updateAccountBalance(accountId, newBalance, transaction);
+  async updateAccountBalance(accountId: string, newBalance: number, dbTransaction?: Knex.Transaction): Promise<void> {
+    const affectedRows = await this.repository.updateAccountBalance(accountId, newBalance, dbTransaction);
     if (affectedRows === 0 || affectedRows > 1) {
       throw new UpdateError(`Invalid number for updated rows: ${affectedRows}`);
     }

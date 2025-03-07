@@ -12,13 +12,13 @@ export class TransactionRepositoryImpl implements Repository<string, CreateTrans
     Transaction.knex(knexConnector.getConnector());
   }
 
-  getById(entityId: string): Promise<Transaction | undefined> {
-    throw new Error("Method not implemented.");
+  async getById(entityId: string): Promise<Transaction | undefined> {
+    return await Transaction.query().findById(entityId);
   }
 
-  async insert(newTransaction: CreateTransactionDto, transaction?: Knex.Transaction): Promise<Transaction> {
-    if (transaction) {
-      return await Transaction.query(transaction).insert(newTransaction);
+  async insert(newTransaction: CreateTransactionDto, dbTransaction?: Knex.Transaction): Promise<Transaction> {
+    if (dbTransaction) {
+      return await Transaction.query(dbTransaction).insert(newTransaction);
     }
     return await Transaction.query().insert(newTransaction);
   }

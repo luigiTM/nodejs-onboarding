@@ -5,5 +5,5 @@ import Transaction from "../model/transaction";
 import { Knex } from "knex";
 
 export interface TransactionService extends Service<CreateTransactionDto, Transaction, Knex.Transaction> {
-  validateAndCreate(userDto: UserDto, newTransaction: CreateTransactionDto, transaction?: Knex.Transaction): Promise<Transaction>;
+  validateAndCreate(userDto: UserDto, newTransaction: CreateTransactionDto, dbTransaction?: Knex.Transaction): Promise<Transaction>;
 }

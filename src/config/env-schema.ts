@@ -12,6 +12,7 @@ export const envVarsSchema = z.object({
   DATABASE_USER: z.preprocess((database_user) => database_user, z.string()),
   DATABASE_PASSWORD: z.preprocess((database_password) => database_password, z.string()),
   DATABASE: z.preprocess((database) => database, z.string()),
+  FREE_CURRENCY_API_URL: z.preprocess((freeCurrencyApiUrl) => freeCurrencyApiUrl, z.string()),
   FREE_CURRENCY_API_KEY: z.preprocess((freeCurrencyApiKey) => freeCurrencyApiKey, z.string()),
   TRANSACTION_FEE_PERCENTAGE: z.preprocess((transactionFeePercentage) => parseFloat(transactionFeePercentage as string), z.number().positive().max(1)),
   FEES_ACCOUNT_EMAIL: z.preprocess((feesAccountEmail) => feesAccountEmail, z.string().email()),

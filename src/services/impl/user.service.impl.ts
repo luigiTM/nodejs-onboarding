@@ -61,8 +61,8 @@ export class UserServiceImpl implements UserService {
     return await this.authService.createToken(user);
   }
 
-  async getUserByEmail(userEmail: string, transaction?: Knex.Transaction): Promise<UserDto | undefined> {
-    const user = await this.repository.findByEmail(userEmail, transaction);
+  async getUserByEmail(userEmail: string, dbTransaction?: Knex.Transaction): Promise<UserDto | undefined> {
+    const user = await this.repository.findByEmail(userEmail, dbTransaction);
     if (user) {
       return toDto(user);
     }

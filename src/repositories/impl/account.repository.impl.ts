@@ -24,9 +24,9 @@ export class AccountRepositoryImpl implements AccountRepository {
     return await Account.query().findById(entityId).withGraphJoined("[user, currency]");
   }
 
-  async updateAccountBalance(accountId: string, newBalance: number, transaction?: Knex.Transaction): Promise<number> {
-    if (transaction) {
-      return await Account.query(transaction).update({ balance: newBalance }).where("id", accountId);
+  async updateAccountBalance(accountId: string, newBalance: number, dbTransaction?: Knex.Transaction): Promise<number> {
+    if (dbTransaction) {
+      return await Account.query(dbTransaction).update({ balance: newBalance }).where("id", accountId);
     }
     return await Account.query().update({ balance: newBalance }).where("id", accountId);
   }
