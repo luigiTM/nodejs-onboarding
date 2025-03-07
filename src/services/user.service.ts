@@ -4,7 +4,7 @@ import { UserLoginDto } from "../dtos/user/user-login.dto";
 import { UserDto } from "../dtos/user/user.dto";
 import { Service } from "./entity.service";
 
-export interface UserService extends Service<CreateUserDto, UserDto, Knex.Transaction> {
+export interface UserService extends Service<string, CreateUserDto, UserDto, Knex.Transaction> {
   login(userLogin: UserLoginDto, dbTransaction?: Knex.Transaction): Promise<string>;
   getUserByEmail(userEmail: string, dbTransaction?: Knex.Transaction): Promise<UserDto | undefined>;
 }

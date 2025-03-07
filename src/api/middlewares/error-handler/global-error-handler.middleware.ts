@@ -9,6 +9,7 @@ import { DataNotFoundError } from "../../../errors/data-not-found.error";
 import { InsufficientBalanceError } from "../../../errors/insufficient-balance.error";
 import { CurrencyConversionError } from "../../../errors/currency-conversion.error";
 import { InvalidUserError } from "../../../errors/invalid-user.error";
+import { InvalidParametersError } from "../../../errors/InvalidParametersError";
 
 export class GlobalErrorHandler implements ErrorHandler {
   constructor() {}
@@ -39,6 +40,9 @@ export class GlobalErrorHandler implements ErrorHandler {
       messages.push(error.message);
     } else if (error instanceof CurrencyConversionError) {
       messages.push(error.message);
+    } else if (error instanceof InvalidParametersError) {
+      status = StatusCodes.UNPROCESSABLE_ENTITY;
+      messages = messages.concat(error.getInvalidParameters());
     } else {
       console.log(error);
       messages.push("Something went wrong");

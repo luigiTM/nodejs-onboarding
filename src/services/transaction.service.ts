@@ -4,6 +4,6 @@ import { UserDto } from "../dtos/user/user.dto";
 import Transaction from "../model/transaction";
 import { Knex } from "knex";
 
-export interface TransactionService extends Service<CreateTransactionDto, Transaction, Knex.Transaction> {
+export interface TransactionService extends Service<string, CreateTransactionDto, Transaction, Knex.Transaction> {
   validateAndCreate(userDto: UserDto, newTransaction: CreateTransactionDto, dbTransaction?: Knex.Transaction): Promise<Transaction>;
 }

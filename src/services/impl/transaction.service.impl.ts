@@ -28,14 +28,14 @@ export class TransactionServiceImpl implements TransactionService {
 
   @Transactional()
   async validateAndCreate(userDto: UserDto, newTransaction: CreateTransactionDto, dbTransaction?: Knex.Transaction): Promise<Transaction> {
-    const sourceAccount = await this.accountService.getAccountById(newTransaction.sourceAccountId, dbTransaction);
+    const sourceAccount = await this.accountService.getById(newTransaction.sourceAccountId, dbTransaction);
     if (!sourceAccount) {
       throw new DataNotFoundError("Source account not found");
     }
     if (sourceAccount.userId !== userDto.id) {
       throw new UnauthorizedError("Invalid user");
     }
-    const destinationAccount = await this.accountService.getAccountById(newTransaction.destinationAccountId, dbTransaction);
+    const destinationAccount = await this.accountService.getById(newTransaction.destinationAccountId, dbTransaction);
     if (!destinationAccount) {
       throw new DataNotFoundError("Destination account not found");
     }
@@ -57,5 +57,9 @@ export class TransactionServiceImpl implements TransactionService {
 
   async create(newTransaction: CreateTransactionDto, dbTransaction?: Knex.Transaction): Promise<Transaction> {
     return await this.transactionRepository.insert(newTransaction, dbTransaction);
+  }
+
+  getById(entityId: string, dbTransaction?: Knex.Transaction): Promise<Transaction | undefined> {
+    throw new Error("Method not implemented.");
   }
 }

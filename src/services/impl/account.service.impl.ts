@@ -21,7 +21,7 @@ export class AccountServiceImpl implements AccountService {
     return accounts.map((account) => toDto(account));
   }
 
-  async getAccountById(accountId: string, dbTransaction?: Knex.Transaction): Promise<AccountDto | undefined> {
+  async getById(accountId: string, dbTransaction?: Knex.Transaction): Promise<AccountDto | undefined> {
     const account = await this.repository.getById(accountId, dbTransaction);
     if (account) {
       return toDto(account);

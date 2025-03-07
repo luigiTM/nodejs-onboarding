@@ -18,5 +18,6 @@ export class UserRoutes extends BaseRoutes<UserController> {
     this.router.post("/login", this.controller.login.bind(this.controller));
     this.router.use(this.authMiddleware.protect.bind(this.authMiddleware));
     this.router.get("/:userId/accounts", this.controller.getAccounts.bind(this.controller));
+    this.router.get("/:userId", this.controller.getUserById.bind(this.controller));
   }
 }
