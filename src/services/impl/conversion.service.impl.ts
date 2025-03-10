@@ -5,6 +5,7 @@ import env from "../../config";
 import { CurrencyConversionError } from "../../errors/currency-conversion.error";
 import { SimpleCache } from "../../util/cache/simple.cache";
 import { Cache } from "../../util/cache/cache";
+import { removeKeys } from "../../util/utils";
 
 interface ConversionResponse {
   data: { [currencyName: string]: number };
@@ -43,7 +44,7 @@ export class ConversionServiceImpl implements ConversionService {
     }
     const conversionRatesDto = {
       baseCurrency: baseCurrency,
-      conversionRates: conversionRates.conversionRates,
+      conversionRates: removeKeys(conversionRates.conversionRates, toCurrencies),
     };
     return conversionRatesDto;
   }

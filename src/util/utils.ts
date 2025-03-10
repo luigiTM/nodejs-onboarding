@@ -5,3 +5,5 @@ export const safeExecute = <T>(execute: (request: Request, response: Response, n
     Promise.resolve(execute(request, response, next)).catch(next);
   };
 };
+
+export const removeKeys = (obj: Record<string, number>, keys: string[]) => Object.fromEntries(Object.entries(obj).filter(([key]) => keys.includes(key)));
