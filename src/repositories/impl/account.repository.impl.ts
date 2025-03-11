@@ -12,22 +12,23 @@ export class AccountRepositoryImpl implements AccountRepository {
     Account.knex(knexConnector.getConnector());
   }
 
-  async insert(newAccount: CreateAccountDto): Promise<Account> {
-    return await Account.query().insert(newAccount).withGraphJoined("[user, currency]");
+  async insert(newAccount: CreateAccountDto, dbTransaction?: Knex.Transaction): Promise<Account> {
+    const queryBuilder = dbTransaction ? Account.query(dbTransaction) : Account.query();
+    return await queryBuilder.insert(newAccount).withGraphJoined("[user, currency]");
   }
 
-  async getAccountsByUser(userId: string): Promise<Account[]> {
-    return await Account.query().where("user_id", userId).withGraphJoined("[user, currency]");
+  async getAccountsByUser(userId: string, dbTransaction?: Knex.Transaction): Promise<Account[]> {
+    const queryBuilder = dbTransaction ? Account.query(dbTransaction) : Account.query();
+    return await queryBuilder.where("user_id", userId).withGraphJoined("[user, currency]");
   }
 
-  async getById(entityId: string): Promise<Account | undefined> {
-    return await Account.query().findById(entityId).withGraphJoined("[user, currency]");
+  async getById(entityId: string, dbTransaction?: Knex.Transaction): Promise<Account | undefined> {
+    const queryBuilder = dbTransaction ? Account.query(dbTransaction) : Account.query();
+    return await queryBuilder.findById(entityId).withGraphJoined("[user, currency]");
   }
 
   async updateAccountBalance(accountId: string, newBalance: number, dbTransaction?: Knex.Transaction): Promise<number> {
-    if (dbTransaction) {
-      return await Account.query(dbTransaction).update({ balance: newBalance }).where("id", accountId);
-    }
-    return await Account.query().update({ balance: newBalance }).where("id", accountId);
+    const queryBuilder = dbTransaction ? Account.query(dbTransaction) : Account.query();
+    return await queryBuilder.update({ balance: newBalance }).where("id", accountId);
   }
 }

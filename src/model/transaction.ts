@@ -26,19 +26,19 @@ export default class Transaction extends Model {
 
   static relationMappings = () => ({
     sourceAccount: {
-      relation: Model.HasOneRelation,
+      relation: Model.BelongsToOneRelation,
       modelClass: Account,
       join: {
         from: "transaction.source_account_id",
         to: "account.id",
       },
-      destinationAccount: {
-        relation: Model.HasOneRelation,
-        modelClass: Account,
-        join: {
-          from: "transaction.destination_account_id",
-          to: "account.id",
-        },
+    },
+    destinationAccount: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: Account,
+      join: {
+        from: "transaction.destination_account_id",
+        to: "account.id",
       },
     },
   });

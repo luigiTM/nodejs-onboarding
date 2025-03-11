@@ -5,6 +5,7 @@ import { TransactionServiceImpl } from "../../../services/impl/transaction.servi
 import { createTransactionDtoSchema } from "../../../dtos/transaction/create-transaction.dto";
 import { TransactionService } from "../../../services/transaction.service";
 import { userDtoSchema } from "../../../dtos/user/user.dto";
+import { paginationDtoSchema } from "../../../dtos/common/pagination.dto";
 
 @injectable()
 export class TransactionController {
@@ -15,5 +16,16 @@ export class TransactionController {
     const userDto = userDtoSchema.parse(request.userDto);
     const transactionCreated = await this.service.validateAndCreate(userDto, newTransaction);
     response.json(transactionCreated);
+  });
+
+  getTransaction = safeExecute(async (request: Request, response: Response) => {
+    const pagination = {
+      page: parseInt((request.query.page ?? 0).toString()),
+      size: parseInt((request.query.size ?? 10).toString()),
+    };
+    const result = paginationDtoSchema.parse(pagination);
+    const loggedUser = userDtoSchema.parse(request.userDto);
+    const transactions = await this.service.getTransactionsByUser(loggedUser.id, result);
+    response.json(transactions);
   });
 }

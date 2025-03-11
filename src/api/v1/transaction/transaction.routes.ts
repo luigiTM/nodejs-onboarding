@@ -15,6 +15,7 @@ export class TransactionRoutes extends BaseRoutes<TransactionController> {
 
   protected setRoutes(): void {
     this.router.use(this.authMiddleware.protect.bind(this.authMiddleware));
-    this.router.post("/", this.controller.createTransaction.bind(this.controller));
+    this.router.post("", this.controller.createTransaction.bind(this.controller));
+    this.router.get("", this.controller.getTransaction.bind(this.controller));
   }
 }

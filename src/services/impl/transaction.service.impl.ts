@@ -2,7 +2,6 @@ import { inject, injectable } from "inversify";
 import { CreateTransactionDto } from "../../dtos/transaction/create-transaction.dto";
 import { TransactionRepositoryImpl } from "../../repositories/impl/transaction.repository";
 import Transaction from "../../model/transaction";
-import { Repository } from "../../repositories/entity.repository";
 import { AccountServiceImpl } from "./account.service.impl";
 import { AccountService } from "../account.service";
 import { DataNotFoundError } from "../../errors/data-not-found.error";
@@ -16,18 +15,21 @@ import { ConversionServiceImpl } from "./conversion.service.impl";
 import { ConversionService } from "../conversion.service";
 import { FeeServiceImpl } from "./fee.service.impl";
 import { FeeService } from "../fee.service";
+import { toDto, TransactionDto } from "../../dtos/transaction/transaction.dto";
+import { PaginationDto } from "../../dtos/common/pagination.dto";
+import { TransactionRepository } from "../../repositories/transaction.repository";
 
 @injectable()
 export class TransactionServiceImpl implements TransactionService {
   constructor(
-    @inject(TransactionRepositoryImpl) public readonly transactionRepository: Repository<string, CreateTransactionDto, Transaction, Knex.Transaction>,
+    @inject(TransactionRepositoryImpl) public readonly repository: TransactionRepository,
     @inject(AccountServiceImpl) public readonly accountService: AccountService,
     @inject(ConversionServiceImpl) public readonly conversionService: ConversionService,
     @inject(FeeServiceImpl) public readonly feeService: FeeService,
   ) {}
 
   @Transactional()
-  async validateAndCreate(userDto: UserDto, newTransaction: CreateTransactionDto, dbTransaction?: Knex.Transaction): Promise<Transaction> {
+  async validateAndCreate(userDto: UserDto, newTransaction: CreateTransactionDto, dbTransaction?: Knex.Transaction): Promise<TransactionDto> {
     const sourceAccount = await this.accountService.getById(newTransaction.sourceAccountId, dbTransaction);
     if (!sourceAccount) {
       throw new DataNotFoundError("Source account not found");
@@ -52,14 +54,20 @@ export class TransactionServiceImpl implements TransactionService {
     const newDestinationAccountBalance = destinationAccount.balance + newTransaction.amount * conversionRate.conversionRates[destinationAccount.currency];
     await this.accountService.updateAccountBalance(newTransaction.sourceAccountId, newSourceAccountBalance, dbTransaction);
     await this.accountService.updateAccountBalance(newTransaction.destinationAccountId, newDestinationAccountBalance, dbTransaction);
-    return await this.create(newTransaction, dbTransaction);
+    const transactionCreated = await this.create(newTransaction, dbTransaction);
+    return toDto(transactionCreated);
   }
 
   async create(newTransaction: CreateTransactionDto, dbTransaction?: Knex.Transaction): Promise<Transaction> {
-    return await this.transactionRepository.insert(newTransaction, dbTransaction);
+    return await this.repository.insert(newTransaction, dbTransaction);
   }
 
-  getById(entityId: string, dbTransaction?: Knex.Transaction): Promise<Transaction | undefined> {
-    throw new Error("Method not implemented.");
+  async getById(transactionId: string, dbTransaction?: Knex.Transaction): Promise<Transaction | undefined> {
+    return await this.repository.getById(transactionId, dbTransaction);
+  }
+
+  async getTransactionsByUser(userId: string, pagination: PaginationDto): Promise<TransactionDto[]> {
+    const transaction = await this.repository.getTransactionsByUser(userId, pagination);
+    return transaction.map((transaction) => toDto(transaction));
   }
 }

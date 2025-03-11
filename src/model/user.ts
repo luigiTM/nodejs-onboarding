@@ -1,5 +1,6 @@
 import { Model } from "objection";
 import { Tables } from "../db/enums/tables";
+import Account from "./account";
 
 export default class User extends Model {
   static tableName = Tables.user;
@@ -19,4 +20,15 @@ export default class User extends Model {
       password: { type: "string" },
     },
   };
+
+  static relationMappings = () => ({
+    accounts: {
+      relation: Model.HasManyRelation,
+      modelClass: Account,
+      join: {
+        from: "user.id",
+        to: "account.user_id",
+      },
+    },
+  });
 }

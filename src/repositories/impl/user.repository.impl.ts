@@ -12,15 +12,18 @@ export class UserRepositoryImpl implements UserRepository {
     User.knex(knexConnector.getConnector());
   }
 
-  async getById(entityId: string): Promise<User | undefined> {
-    return await User.query().findById(entityId);
+  async getById(entityId: string, dbTransaction?: Knex.Transaction): Promise<User | undefined> {
+    const queryBuilder = dbTransaction ? User.query(dbTransaction) : User.query();
+    return await queryBuilder.findById(entityId);
   }
 
-  async insert(user: CreateUserDto): Promise<User> {
-    return await User.query().insert(user);
+  async insert(user: CreateUserDto, dbTransaction?: Knex.Transaction): Promise<User> {
+    const queryBuilder = dbTransaction ? User.query(dbTransaction) : User.query();
+    return await queryBuilder.insert(user);
   }
 
-  async findByEmail(user_email: string): Promise<User | undefined> {
-    return await User.query().findOne({ email: user_email });
+  async findByEmail(user_email: string, dbTransaction?: Knex.Transaction): Promise<User | undefined> {
+    const queryBuilder = dbTransaction ? User.query(dbTransaction) : User.query();
+    return await queryBuilder.findOne({ email: user_email });
   }
 }
