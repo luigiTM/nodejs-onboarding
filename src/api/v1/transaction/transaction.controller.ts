@@ -20,8 +20,8 @@ export class TransactionController {
 
   getTransaction = safeExecute(async (request: Request, response: Response) => {
     const pagination = {
-      page: parseInt((request.query.page ?? 0).toString()),
-      size: parseInt((request.query.size ?? 10).toString()),
+      page: Number(request.query.page) || 0,
+      size: Number(request.query.size) || 10,
     };
     const result = paginationDtoSchema.parse(pagination);
     const loggedUser = userDtoSchema.parse(request.userDto);
