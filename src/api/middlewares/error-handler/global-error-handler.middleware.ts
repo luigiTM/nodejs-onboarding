@@ -58,6 +58,8 @@ export class GlobalErrorHandler implements ErrorHandler {
         response_messages.push(`Field ${issue.path} is required`);
       } else if (issue.message.includes("Expected")) {
         response_messages.push(`Field ${issue.path} ${issue.message.toLowerCase()}`);
+      } else {
+        response_messages.push(issue.message);
       }
     });
     return response_messages;

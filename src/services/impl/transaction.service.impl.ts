@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { CreateTransactionDto } from "../../dtos/transaction/create-transaction.dto";
-import { TransactionRepositoryImpl } from "../../repositories/impl/transaction.repository";
+import { TransactionRepositoryImpl } from "../../repositories/impl/transaction.repository.impl";
 import Transaction from "../../model/transaction";
 import { AccountServiceImpl } from "./account.service.impl";
 import { AccountService } from "../account.service";
@@ -18,6 +18,8 @@ import { FeeService } from "../fee.service";
 import { toDto, TransactionDto } from "../../dtos/transaction/transaction.dto";
 import { PaginationDto } from "../../dtos/common/pagination.dto";
 import { TransactionRepository } from "../../repositories/transaction.repository";
+import { OrderingDto } from "../../dtos/common/ordering.dto";
+import { TransactionFilteringDto } from "../../dtos/transaction/transaction-filtering.dto";
 
 @injectable()
 export class TransactionServiceImpl implements TransactionService {
@@ -66,8 +68,8 @@ export class TransactionServiceImpl implements TransactionService {
     return await this.repository.getById(transactionId, dbTransaction);
   }
 
-  async getTransactionsByUser(userId: string, pagination: PaginationDto): Promise<TransactionDto[]> {
-    const transaction = await this.repository.getTransactionsByUser(userId, pagination);
+  async getTransactionsByUser(userId: string, pagination: PaginationDto, ordering: OrderingDto[], filtering: TransactionFilteringDto): Promise<TransactionDto[]> {
+    const transaction = await this.repository.getTransactionsByUser(userId, pagination, ordering, filtering);
     return transaction.map((transaction) => toDto(transaction));
   }
 }
