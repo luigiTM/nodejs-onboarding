@@ -7,7 +7,7 @@ import { AccountService } from "../account.service";
 import { DataNotFoundError } from "../../errors/data-not-found.error";
 import { TransactionService } from "../transaction.service";
 import { UserDto } from "../../dtos/user/user.dto";
-import { UnauthorizedError } from "../../errors/unauthorized.error";
+import { UnauthorizedError } from "../../errors/user/unauthorized.error";
 import { InsufficientBalanceError } from "../../errors/insufficient-balance.error";
 import { Transactional } from "../../decorators/transactional.decorator";
 import { Knex } from "knex";

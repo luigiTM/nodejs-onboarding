@@ -4,7 +4,7 @@ export class InvalidParametersError extends Error {
     super(message);
     this.invalidParameters = invalidParameters;
     Object.setPrototypeOf(this, InvalidParametersError.prototype);
-    this.name = "CurrencyConversionError";
+    this.name = "InvalidParametersError";
   }
 
   getInvalidParameters(): string[] {

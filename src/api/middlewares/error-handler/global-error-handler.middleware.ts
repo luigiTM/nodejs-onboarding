@@ -2,14 +2,14 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ErrorHandler } from "./error-handler";
 import { ZodError } from "zod";
-import { EmailAlreadyInUseError } from "../../../errors/email-already-in-use.error";
-import { UnauthorizedError } from "../../../errors/unauthorized.error";
-import { UserOrPasswordError } from "../../../errors/user-or-password.error";
+import { EmailAlreadyInUseError } from "../../../errors/user/email-already-in-use.error";
+import { UnauthorizedError } from "../../../errors/user/unauthorized.error";
+import { UserOrPasswordError } from "../../../errors/user/user-or-password.error";
 import { DataNotFoundError } from "../../../errors/data-not-found.error";
 import { InsufficientBalanceError } from "../../../errors/insufficient-balance.error";
 import { CurrencyConversionError } from "../../../errors/currency-conversion.error";
-import { InvalidUserError } from "../../../errors/invalid-user.error";
-import { InvalidParametersError } from "../../../errors/InvalidParametersError";
+import { InvalidUserError } from "../../../errors/user/invalid-user.error";
+import { InvalidParametersError } from "../../../errors/invalid-parameters.error";
 
 export class GlobalErrorHandler implements ErrorHandler {
   constructor() {}

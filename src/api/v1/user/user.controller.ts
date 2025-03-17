@@ -8,8 +8,8 @@ import { UserServiceImpl } from "../../../services/impl/user.service.impl";
 import { userDtoSchema } from "../../../dtos/user/user.dto";
 import { AccountServiceImpl } from "../../../services/impl/account.service.impl";
 import { AccountService } from "../../../services/account.service";
-import { InvalidUserError } from "../../../errors/invalid-user.error";
-import { InvalidParametersError } from "../../../errors/InvalidParametersError";
+import { InvalidUserError } from "../../../errors/user/invalid-user.error";
+import { InvalidParametersError } from "../../../errors/invalid-parameters.error";
 import { DataNotFoundError } from "../../../errors/data-not-found.error";
 import { z } from "zod";
 

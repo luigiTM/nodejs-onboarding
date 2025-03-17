@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { JwtPayload } from "jsonwebtoken";
-import { UnauthorizedError } from "../../errors/unauthorized.error";
+import { UnauthorizedError } from "../../errors/user/unauthorized.error";
 import { inject, injectable } from "inversify";
 import { AuthService } from "../auth/auth.service";
 import { AuthServiceImpl } from "../auth/auth.service.impl";

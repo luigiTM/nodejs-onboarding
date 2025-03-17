@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { InvalidFormatError } from "../errors/invalid-format.error";
 
 export const safeExecute = <T>(execute: (request: Request, response: Response, next: NextFunction) => T | Promise<T>) => {
   return (request: Request, response: Response, next: NextFunction): void => {
@@ -20,7 +21,7 @@ export const formatEndOfDay = (dateString: string) => {
 
 const getSlices = (dateString: string) => {
   if (!/^\d{8}$/.test(dateString)) {
-    throw new Error("Invalid format. Use YYYYMMDD.");
+    throw new InvalidFormatError("Invalid date format. Use YYYYMMDD.");
   }
   const year = dateString.slice(0, 4);
   const month = dateString.slice(4, 6);
