@@ -1,7 +1,6 @@
 import { inject, injectable } from "inversify";
 import { CreateTransactionDto } from "../../dtos/transaction/create-transaction.dto";
 import { TransactionRepositoryImpl } from "../../repositories/impl/transaction.repository.impl";
-import Transaction from "../../model/transaction";
 import { AccountServiceImpl } from "./account.service.impl";
 import { AccountService } from "../account.service";
 import { DataNotFoundError } from "../../errors/data-not-found.error";
@@ -57,15 +56,20 @@ export class TransactionServiceImpl implements TransactionService {
     await this.accountService.updateAccountBalance(newTransaction.sourceAccountId, newSourceAccountBalance, dbTransaction);
     await this.accountService.updateAccountBalance(newTransaction.destinationAccountId, newDestinationAccountBalance, dbTransaction);
     const transactionCreated = await this.create(newTransaction, dbTransaction);
-    return toDto(transactionCreated);
+    return transactionCreated;
   }
 
-  async create(newTransaction: CreateTransactionDto, dbTransaction?: Knex.Transaction): Promise<Transaction> {
-    return await this.repository.insert(newTransaction, dbTransaction);
+  async create(newTransaction: CreateTransactionDto, dbTransaction?: Knex.Transaction): Promise<TransactionDto> {
+    const result = await this.repository.insert(newTransaction, dbTransaction);
+    return toDto(result);
   }
 
-  async getById(transactionId: string, dbTransaction?: Knex.Transaction): Promise<Transaction | undefined> {
-    return await this.repository.getById(transactionId, dbTransaction);
+  async getById(transactionId: string, dbTransaction?: Knex.Transaction): Promise<TransactionDto | undefined> {
+    const transaction = await this.repository.getById(transactionId, dbTransaction);
+    if (transaction) {
+      return toDto(transaction);
+    }
+    return undefined;
   }
 
   async getTransactionsByUser(userId: string, pagination: PaginationDto, ordering: OrderingDto[], filtering: TransactionFilteringDto): Promise<TransactionDto[]> {

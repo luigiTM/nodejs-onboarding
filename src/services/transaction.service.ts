@@ -8,7 +8,7 @@ import { TransactionDto } from "../dtos/transaction/transaction.dto";
 import { OrderingDto } from "../dtos/common/ordering.dto";
 import { TransactionFilteringDto } from "../dtos/transaction/transaction-filtering.dto";
 
-export interface TransactionService extends Service<string, CreateTransactionDto, Transaction, Knex.Transaction> {
+export interface TransactionService extends Service<string, CreateTransactionDto, TransactionDto, Knex.Transaction> {
   validateAndCreate(userDto: UserDto, newTransaction: CreateTransactionDto, dbTransaction?: Knex.Transaction): Promise<TransactionDto>;
   getTransactionsByUser(userId: string, pagination: PaginationDto, ordering: OrderingDto[], filtering: TransactionFilteringDto): Promise<TransactionDto[]>;
 }

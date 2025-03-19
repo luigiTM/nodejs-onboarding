@@ -2,6 +2,8 @@
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@types/bcrypt": "^5.0.2",
+    "@types/chai": "^5.2.0",
+    "@types/chai-as-promised": "^8.0.2",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
@@ -10,12 +12,18 @@
     "@types/node": "^22.12.0",
     "@types/pg": "^8.11.11",
     "@types/uuid": "^10.0.0",
+    "chai": "^5.2.0",
+    "chai-as-promised": "^8.0.1",
     "env-cmd": "^10.1.0",
     "eslint": "^9.19.0",
     "globals": "^15.14.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.4.1",
+    "mocha": "^11.1.0",
     "prettier": "3.4.2",
+    "should": "^13.2.3",
+    "simon": "^0.2.3",
+    "sinon": "^19.0.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.23.0"
@@ -28,13 +36,16 @@
     "knex:rollback-all": "npx env-cmd knex --knexfile src/db/knex/knexfile.ts migrate:rollback --all",
     "knex:seed": "npx env-cmd knex --knexfile src/db/knex/knexfile.ts seed:run",
     "knex:rebuild-database": "yarn run knex:rollback-all && yarn run knex:migrate && yarn run knex:seed",
-    "test": " "
+    "test": "npx env-cmd -f .env.test mocha -r ts-node/register src/tests/**/*.test.ts"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown",
     "*.{js,css,md}": "prettier --write"
   },
   "dependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/should": "^13.0.0",
+    "@types/sinon": "^17.0.4",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",

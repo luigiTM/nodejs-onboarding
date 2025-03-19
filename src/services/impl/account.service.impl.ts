@@ -16,17 +16,17 @@ export class AccountServiceImpl implements AccountService {
     return toDto(result);
   }
 
-  async getAccounts(userId: string): Promise<AccountDto[]> {
-    const accounts = await this.repository.getAccountsByUser(userId);
-    return accounts.map((account) => toDto(account));
-  }
-
   async getById(accountId: string, dbTransaction?: Knex.Transaction): Promise<AccountDto | undefined> {
     const account = await this.repository.getById(accountId, dbTransaction);
     if (account) {
       return toDto(account);
     }
     return undefined;
+  }
+
+  async getAccounts(userId: string): Promise<AccountDto[]> {
+    const accounts = await this.repository.getAccountsByUser(userId);
+    return accounts.map((account) => toDto(account));
   }
 
   async updateAccountBalance(accountId: string, newBalance: number, dbTransaction?: Knex.Transaction): Promise<void> {
