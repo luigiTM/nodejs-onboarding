@@ -6,7 +6,7 @@ export async function up(knex: Knex) {
     table.uuid("id").primary().defaultTo(knex.fn.uuid()).index();
     table.uuid("user_id").references("id").inTable("user").index();
     table.integer("currency_id").references("id").inTable("currency");
-    table.specificType("balance", "money").defaultTo(0);
+    table.decimal("balance", 10, 2).defaultTo(0);
   });
 }
 

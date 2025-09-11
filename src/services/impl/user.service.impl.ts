@@ -13,21 +13,22 @@ import { AuthServiceImpl } from "../../api/auth/auth.service.impl";
 import { UserRepository } from "../../repositories/user.respository";
 import { AccountServiceImpl } from "./account.service.impl";
 import { AccountService } from "../account.service";
+import { Knex } from "knex";
 
 @injectable()
 export class UserServiceImpl implements UserService {
   constructor(
     @inject(AuthServiceImpl) public readonly authService: AuthService,
-    @inject(UserRepositoryImpl) public readonly userRepository: UserRepository,
+    @inject(UserRepositoryImpl) public readonly repository: UserRepository,
     @inject(AccountServiceImpl) public readonly accountService: AccountService,
   ) {}
 
   public async create(newUser: CreateUserDto): Promise<UserDto> {
     try {
       newUser.password = await this.authService.hashPassword(newUser.password);
-      const createdUser = await this.userRepository.insert(newUser);
+      const createdUser = await this.repository.insert(newUser);
       // Create the accounts associated with the user
-      const promises = [Currencies.UYU, Currencies.USD, Currencies.EUR].map(async (currencyId) => {
+      const promises = [Currencies.BRL, Currencies.USD, Currencies.EUR].map(async (currencyId) => {
         await this.accountService.create({
           userId: createdUser.id,
           currencyId,
@@ -49,7 +50,7 @@ export class UserServiceImpl implements UserService {
   }
 
   async login(userLogin: UserLoginDto): Promise<string> {
-    const user = await this.userRepository.findByEmail(userLogin.email);
+    const user = await this.repository.findByEmail(userLogin.email);
     if (!user) {
       throw new UserOrPasswordError();
     }
@@ -58,5 +59,13 @@ export class UserServiceImpl implements UserService {
       throw new UserOrPasswordError();
     }
     return await this.authService.createToken(user);
+  }
+
+  async getUserByEmail(userEmail: string, dbTransaction?: Knex.Transaction): Promise<UserDto | undefined> {
+    const user = await this.repository.findByEmail(userEmail, dbTransaction);
+    if (user) {
+      return toDto(user);
+    }
+    return undefined;
   }
 }

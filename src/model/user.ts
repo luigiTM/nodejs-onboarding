@@ -8,6 +8,7 @@ export default class User extends Model {
   lastName!: string;
   email!: string;
   password!: string;
+
   static jsonSchema = {
     type: "object",
     required: ["firstName", "lastName", "email", "password"],
